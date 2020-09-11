@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class ShaderProgram {
 
-	private static int programId;
+	private  int programId;
 
 	public void createProgram(String vFilename, String fFilename) throws Exception {
 		// create a new shader program in OpenGL
@@ -85,7 +85,7 @@ public class ShaderProgram {
 		}
 	}
 
-	public static int getProgram() {
+	public  int getProgram() {
 		return programId;
 	}
 

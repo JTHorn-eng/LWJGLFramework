@@ -24,17 +24,16 @@ public abstract class Rendering {
 
 		// Set clear color
 		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-	
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 
 	}
 
-	public void renderLoop(boolean indexRendering, boolean mode) {
+	public void renderLoop(ShaderProgram sp, boolean indexRendering, boolean mode) {
 		while (!glfwWindowShouldClose(Window.getWindow())) {
 			clear(mode);
 			preRenderingEffects();
-			renderModels(indexRendering, mode);
+			renderModels(sp, indexRendering, mode);
 			postRendering();
 			glfwSwapBuffers(Window.getWindow());
 			glfwPollEvents();
@@ -44,13 +43,13 @@ public abstract class Rendering {
 		}
 	}
 
-	private void renderModels(boolean indexRendering, boolean b) {
+	private void renderModels(ShaderProgram sp, boolean indexRendering, boolean b) {
+		glUseProgram(sp.getProgram());
 		
 		for (Model model : ModelManager.getModels()) {
 			// load shader variables and use shader program (also binds)
-			glUseProgram(ShaderProgram.getProgram());
 			glBindVertexArray(model.getVaoID());
-		
+			glEnableVertexAttribArray(0);
 
 			if (indexRendering) {
 
@@ -60,9 +59,9 @@ public abstract class Rendering {
 			
 			glDisableVertexAttribArray(0);
 			glBindVertexArray(0);
-			glUseProgram(0);
 
 		}
+		glUseProgram(0);
 
 
 	}
