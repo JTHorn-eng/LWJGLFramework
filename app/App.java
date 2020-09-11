@@ -1,36 +1,28 @@
 package app;
 
-import org.lwjgl.Version;
+/**
+ * End-User generates models and associates shader program for model type Then
+ * pre-rendering and post-rendering effects are added by implementing rendering
+ * interface methods. User then calls render method in Render.
+ * 
+ */
 
-public class App implements Runnable {
+public class App {
 
-	private Rendering rendering;
+	Framework framework;
 
 	public App() {
-		rendering = new Rendering();
+		framework = new Framework();
 	}
 
 	private void init() {
-
-		System.out.println("Version: " + Version.getVersion());
-		Window.init();
-		Window.createWindow();
-		rendering.renderLoop(false);
-		Window.destroyWindow();
-
+		framework.init();
 	}
 
 	public static void main(String[] args) {
 
 		App app = new App();
-		Thread applicationThread = new Thread(app);
-		applicationThread.start();
+		app.init();
 
 	}
-
-	@Override
-	public void run() {
-		init();
-	}
-
 }

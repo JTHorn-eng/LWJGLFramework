@@ -1,13 +1,14 @@
 package app;
 
 import org.lwjgl.glfw.*;
-
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.IntBuffer;
 
@@ -30,7 +31,7 @@ public class Window {
 	private static int windowWidth = 300;
 	private static IntBuffer viewportWidth;
 	private static IntBuffer viewportHeight;
-	private static String windowTitle = "";
+	private static String windowTitle = "Test Window";
 
 	public static void init() {
 		// Setup an error callback
@@ -54,13 +55,27 @@ public class Window {
 
 	}
 
+	
+
+	public static void resizeWindow(int width, int height) {
+
+		glfwSetWindowSize(window, width, height);
+		// set viewport resolution
+	    glViewport(0, 0, width, height);
+
+	}
+
 	// setup window parameters and create window object
 	public static void createWindow() {
 
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // resizable
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // maximum supported OpenGL version
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // as before but minimum supported
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // Don't use old OpenGL
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
 		// create the window
-		window = GLFW.glfwCreateWindow(windowWidth, windowHeight, "", NULL, NULL);
+		window = GLFW.glfwCreateWindow(windowWidth, windowHeight, "Testing window", NULL, NULL);
 		if (window == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window.");
 		}
@@ -82,10 +97,15 @@ public class Window {
 			// Center the window
 			glfwSetWindowPos(window, (vidmode.width() - viewportWidth.get(0)) / 2,
 					(vidmode.height() - viewportHeight.get(0)) / 2);
+			
 
 			// Make the OpenGL context current
 			glfwMakeContextCurrent(window);
+			GL.createCapabilities();
 
+		    glViewport(0, 0, viewportWidth.get(0), viewportHeight.get(0));
+
+			
 			// Enable v-sync
 			glfwSwapInterval(1);
 
@@ -104,7 +124,7 @@ public class Window {
 		Window.window = window;
 	}
 
-	public int getWindowHeight() {
+	public static int getWindowHeight() {
 		return windowHeight;
 	}
 
@@ -112,7 +132,7 @@ public class Window {
 		Window.windowHeight = windowHeight;
 	}
 
-	public int getWindowWidth() {
+	public static int getWindowWidth() {
 		return windowWidth;
 	}
 

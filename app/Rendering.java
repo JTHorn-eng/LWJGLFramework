@@ -1,56 +1,70 @@
 package app;
 
-import org.lwjgl.opengl.GL;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
- * 
  * User overrides pre and post processing methods in Render mode - 2D (false) 3D
  * (true)
- *
  */
 
-public class Rendering implements Render {
+public abstract class Rendering {
 
-	public void clear(boolean mode) {
+	public abstract void postRendering();
+
+	public abstract void preRenderingEffects();
+
+	private void clear(boolean mode) {
 
 		// LWJGL detects the context in the current thread
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 
-		GL.createCapabilities();
-
 		// Set clear color
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		if (mode) {
-			glClear(GL_COLOR_BUFFER_BIT);
-		} else {
+		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+	
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
+		
 
 	}
 
-	public void renderLoop(boolean mode) {
+	public void renderLoop(boolean indexRendering, boolean mode) {
 		while (!glfwWindowShouldClose(Window.getWindow())) {
-		clear(mode);
-		preRenderingEffects();
+			clear(mode);
+			preRenderingEffects();
+			renderModels(indexRendering, mode);
+			postRendering();
+			glfwSwapBuffers(Window.getWindow());
+			glfwPollEvents();
+		
 
-		glfwSwapBuffers(Window.getWindow());
-
-		postRendering();
+			
 		}
 	}
 
-	@Override
-	public void preRenderingEffects() {
+	private void renderModels(boolean indexRendering, boolean b) {
+		
+		for (Model model : ModelManager.getModels()) {
+			// load shader variables and use shader program (also binds)
+			glUseProgram(ShaderProgram.getProgram());
+			glBindVertexArray(model.getVaoID());
+		
 
-	}
+			if (indexRendering) {
 
-	@Override
-	public void postRendering() {
-		glfwPollEvents();
+			} else {
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+			}
+			
+			glDisableVertexAttribArray(0);
+			glBindVertexArray(0);
+			glUseProgram(0);
+
+		}
+
+
 	}
 
 }
