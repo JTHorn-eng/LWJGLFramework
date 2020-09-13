@@ -12,8 +12,8 @@ public class Framework extends Rendering {
 		Window.createWindow();
 		Window.resizeWindow(1080, 720);
 
-		// load models and associated shader programs
-		// load shaders first ! 
+		// load primitive models
+		
 		ShaderProgram sp = new ShaderProgram();
 		try {
 			sp.createProgram("shaders/Test_Vertex_Shader.txt", "shaders/Test_Fragment_Shader.txt");
@@ -21,17 +21,26 @@ public class Framework extends Rendering {
 			e.printStackTrace();
 		}
 		
-		ModelManager.addModel();
-
+		ModelManager.addModel(ModelType.RIGHT_TRIANGLE, new Texture("test"));
+		
+		
 		// handle model data
 		System.out.println("Loading model data");
 		
 		
 		System.out.println("Rendering");
 		renderLoop(sp, false, false);
-		Window.destroyWindow();
-
+		close();
 	}
+	
+	private void close() {
+		
+		clean();//from rendering class
+		ModelManager.clean();
+		Window.destroyWindow();
+		System.exit(0);
+	}
+	
 
 	@Override
 	public void postRendering() {
@@ -42,5 +51,7 @@ public class Framework extends Rendering {
 	public void preRenderingEffects() {
 
 	}
+	
+
 
 }
