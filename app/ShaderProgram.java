@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class ShaderProgram {
 
-	private int programId;
+	private  int programId;
 
 	public void createProgram(String vFilename, String fFilename) throws Exception {
 		// create a new shader program in OpenGL
@@ -40,11 +40,6 @@ public class ShaderProgram {
 			throw new Exception("Error validating shader program: " + glGetShaderInfoLog(programId, 2048));
 		}
 	}
-	
-	public void loadUnifromVariables() {
-		glUniform1i(glGetUniformLocation(programId, "texture_sampler"), 0);
-	}
-	
 
 	private void loadAndCompileShaderProgram(String filename, int type) {
 		// load and compile the two shaders
@@ -82,7 +77,7 @@ public class ShaderProgram {
 
 		return content;
 	}
-
+	
 	public void deleteShaderProgram() {
 		glUseProgram(0);
 		if (programId != 0) {
@@ -90,7 +85,7 @@ public class ShaderProgram {
 		}
 	}
 
-	public int getProgram() {
+	public  int getProgram() {
 		return programId;
 	}
 
