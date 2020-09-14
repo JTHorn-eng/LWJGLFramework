@@ -28,7 +28,7 @@ public class Framework extends Rendering {
 		
 		
 		System.out.println("Rendering");
-		renderLoop(sp, false, false);
+		renderLoop(false, false);
 		Window.destroyWindow();
 
 	}

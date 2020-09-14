@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL30.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 
 public class Model {
@@ -39,6 +38,8 @@ public class Model {
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		glBufferData(GL_ARRAY_BUFFER, loadBuffer(vertexData), GL_STATIC_DRAW);
 		
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0); //define layout of VBO
 		
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -48,7 +49,7 @@ public class Model {
 	}
 	
 	private FloatBuffer loadBuffer(float[] data) {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+		FloatBuffer buffer = FloatBuffer.allocate(data.length);
 		buffer.put(data);
 		buffer.flip();
 		
