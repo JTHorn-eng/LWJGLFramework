@@ -1,6 +1,7 @@
 package app;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
@@ -19,6 +20,7 @@ public class Primitives {
 
 		//load data into VBOs
 		storeVertexDataInAttributeList(type);
+		bindIndicesBuffer(type);
 		
 		// Unbind VAO after using it
 		glBindVertexArray(0);
@@ -36,9 +38,24 @@ public class Primitives {
 		vboIDs.add(vboID);
 
 	}
+	
+	public static void bindIndicesBuffer(ModelType type) {
+		int vboID = glGenBuffers();
+		vboIDs.add(vboID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(type.getIndexData()), GL_STATIC_DRAW);
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 
 	private static FloatBuffer loadVBOFloats(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+		buffer.put(data);
+		buffer.flip();
+		return buffer;
+	}
+	
+	private static IntBuffer loadIBOInts(int[] data) {
+		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;

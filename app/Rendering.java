@@ -39,19 +39,17 @@ public abstract class Rendering {
 	}
 
 	private void renderModels() {
-		
+		glUseProgram(ShaderProgram.getProgram());
 		for (Model model : ModelManager.getModels()) {
 			// load shader variables and use shader program (also binds)
-			glUseProgram(ShaderProgram.getProgram());
 			System.out.println(model.getVAOID());
 			glBindVertexArray(model.getVAOID());
 			glEnableVertexAttribArray(0);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
-					
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 			glDisableVertexAttribArray(0);
 			glBindVertexArray(0);
-			glUseProgram(0);
-
 		}
+		glUseProgram(0);
+
 	}
 }

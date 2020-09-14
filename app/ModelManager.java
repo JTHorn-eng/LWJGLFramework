@@ -11,7 +11,7 @@ public class ModelManager {
 
 	
 	public static void addModel(ModelType type) {
-		Model model = new Model();
+		Model model = new Model(type);
 		
 		//load model data into VBOs and store vaoID in a new model
 		int vaoID = Primitives.loadModel(type);
