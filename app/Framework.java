@@ -21,26 +21,27 @@ public class Framework extends Rendering {
 			e.printStackTrace();
 		}
 		
-		ModelManager.addModel();
+		ModelManager.addModel(ModelType.SQUARE);
+		renderLoop();
+		
 
-		// handle model data
-		System.out.println("Loading model data");
-		
-		
-		System.out.println("Rendering");
-		renderLoop(false, false);
+		cleanUp();
 		Window.destroyWindow();
-
+	}
+	
+	private void cleanUp() {
+		Primitives.cleanUp();
 	}
 
 	@Override
 	public void postRendering() {
-
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void preRenderingEffects() {
-
+		// TODO Auto-generated method stub
+		
 	}
-
 }

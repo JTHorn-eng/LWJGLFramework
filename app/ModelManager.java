@@ -1,29 +1,27 @@
 package app;
 
 import java.util.ArrayList;
-import app.Model;
+
+
 
 public class ModelManager {
 
 	private static ArrayList<Model> models = new ArrayList<>();
 
-	public static void addModel() {
-		System.out.println("Add model");
+
+	
+	public static void addModel(ModelType type) {
 		Model model = new Model();
-		model.prepareModel();
+		
+		//load model data into VBOs and store vaoID in a new model
+		int vaoID = Primitives.loadModel(type);
+		model.setVAOID(vaoID); 
 		models.add(model);
-
 	}
 
-	public void setModels(ArrayList<Model> models) {
-		ModelManager.models = models;
-	}
-
+	
 	public static ArrayList<Model> getModels() {
-		return ModelManager.models;
+		return models;
 	}
-
-	public void deleteAll() {
-		models.clear();
-	}
+	
 }

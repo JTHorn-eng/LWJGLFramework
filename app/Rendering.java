@@ -16,55 +16,42 @@ public abstract class Rendering {
 
 	public abstract void preRenderingEffects();
 
-	private void clear(boolean mode) {
+	private void clear() {
 
 		// LWJGL detects the context in the current thread
 		// creates the GLCapabilities instance and makes the OpenGL
 		// bindings available for use.
 
 		// Set clear color
-		glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-	
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	public void renderLoop(boolean indexRendering, boolean mode) {
+	public void renderLoop() {
 		while (!glfwWindowShouldClose(Window.getWindow())) {
-			clear(mode);
-			preRenderingEffects();
-			renderModels(indexRendering, mode);
-			postRendering();
+			clear();
+			
+			renderModels();
+			
 			glfwSwapBuffers(Window.getWindow());
 			glfwPollEvents();
-		
-
-			
 		}
 	}
 
-	private void renderModels(boolean indexRendering, boolean b) {
+	private void renderModels() {
 		
 		for (Model model : ModelManager.getModels()) {
 			// load shader variables and use shader program (also binds)
 			glUseProgram(ShaderProgram.getProgram());
-			glBindVertexArray(model.getVaoID());
-		
-
-			if (indexRendering) {
-
-			} else {
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-			}
-			
+			System.out.println(model.getVAOID());
+			glBindVertexArray(model.getVAOID());
+			glEnableVertexAttribArray(0);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+					
 			glDisableVertexAttribArray(0);
 			glBindVertexArray(0);
 			glUseProgram(0);
 
 		}
-
-
 	}
-
 }
