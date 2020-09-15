@@ -4,9 +4,12 @@ public class Model {
 
 	private int vaoID;
 	private ModelType type;
-	
-	public Model(ModelType t) {
+	private int textureID;
+
+	public Model(ModelType t, int vaoID, int textureID) {
 		type = t;
+		this.vaoID = vaoID;
+		this.textureID = textureID;
 	}
 	
 	public ModelType getType() {
@@ -21,6 +24,13 @@ public class Model {
 		return vaoID;
 	}
 	
+	public int getTextureID() {
+		return textureID;
+	}
+
+	public void setTextureID(int textureID) {
+		this.textureID = textureID;
+	}
 	
 	
 	

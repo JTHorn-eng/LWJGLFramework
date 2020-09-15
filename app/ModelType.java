@@ -11,15 +11,31 @@ public enum ModelType {
 					},
 		new int[] {
 				
-				0, 1, 3, 3,2,1
+				0, 1, 3, 
+				3, 2, 1
 				
-		});
+		},
+	 	new float[] {
+	 		0f, 0f,
+	 		0f, 1f,
+	 		1f, 0f,
+	 		
+	 		1f, 1f,
+	 		0f, 1f,
+	 		1f, 0f
+	 			
+	 	});
+	
+	
 	private final float[] vertexData;
 	private final int[] indexData;
+	private final float[] textureData;
 	
-	private ModelType(float[] vertices, int[] indices) {
+	private ModelType(float[] vertices, int[] indices, float[] textureVertices) {
 		vertexData = vertices;
 		indexData = indices;
+		textureData = textureVertices;
+		
 	}
 	
 	public float[] getVertexData() {
@@ -28,6 +44,10 @@ public enum ModelType {
 	
 	public int[] getIndexData() {
 		return indexData;
+	}
+	
+	public float[] getTextureData() {
+		return textureData;
 	}
 
 }

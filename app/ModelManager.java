@@ -7,15 +7,11 @@ import java.util.ArrayList;
 public class ModelManager {
 
 	private static ArrayList<Model> models = new ArrayList<>();
-
-
 	
-	public static void addModel(ModelType type) {
-		Model model = new Model(type);
+	public static void addModel(ModelType type, String textureName) {
 		
 		//load model data into VBOs and store vaoID in a new model
-		int vaoID = Primitives.loadModel(type);
-		model.setVAOID(vaoID); 
+		Model model = Primitives.loadModel(type, textureName);
 		models.add(model);
 	}
 

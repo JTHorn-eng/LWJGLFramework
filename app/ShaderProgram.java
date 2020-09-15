@@ -78,6 +78,11 @@ public class ShaderProgram {
 		return content;
 	}
 	
+	public static void loadUniformVariables() {
+		int samplerLocation = glGetUniformLocation(programId, "textureSampler");
+		glUniform1i(samplerLocation, 0);
+	}
+	
 	public void deleteShaderProgram() {
 		glUseProgram(0);
 		if (programId != 0) {

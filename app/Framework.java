@@ -21,7 +21,7 @@ public class Framework extends Rendering {
 			e.printStackTrace();
 		}
 		
-		ModelManager.addModel(ModelType.SQUARE);
+		ModelManager.addModel(ModelType.SQUARE, "test");
 		renderLoop();
 		
 
