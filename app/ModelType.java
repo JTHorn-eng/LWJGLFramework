@@ -12,16 +12,13 @@ public enum ModelType {
 		new int[] {
 				
 				0, 1, 3, 
-				3, 2, 1
+				3, 1, 2
 				
 		},
 	 	new float[] {
 	 		0f, 0f,
-	 		0f, 1f,
-	 		1f, 0f,
-	 		
+	 		0f, 1f, 
 	 		1f, 1f,
-	 		0f, 1f,
 	 		1f, 0f
 	 			
 	 	});

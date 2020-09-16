@@ -20,6 +20,7 @@ public class Primitives {
 
 	private static ArrayList<Integer> vaoIDs = new ArrayList<>();
 	private static ArrayList<Integer> vboIDs = new ArrayList<>();
+	private static final int BYTES_PER_PIXEL = 4;
 
 	public static Model loadModel(ModelType type, String textureName) {
 
@@ -67,29 +68,48 @@ public class Primitives {
 	}
 
 	public static int loadTexture(ModelType type, String fileName) throws IOException {
-
+		
+		
 		// load image data
 		BufferedImage imageBuffer = ImageIO.read(new File("images/" + fileName + ".png"));
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(imageBuffer, "png", baos);
-		byte[] data = baos.toByteArray();
-		ByteBuffer buffer = BufferUtils.createByteBuffer(data.length);
-		buffer.put(data);
-		buffer.flip();
+		int[] pixels = new int[imageBuffer.getWidth() * imageBuffer.getHeight()];
+		imageBuffer.getRGB(0, 0, imageBuffer.getWidth(), imageBuffer.getHeight(), pixels, 0, imageBuffer.getWidth());
 
+		ByteBuffer buffer = BufferUtils.createByteBuffer(imageBuffer.getWidth() * imageBuffer.getHeight() * BYTES_PER_PIXEL);
+		
+		for(int y= 0; y < imageBuffer.getHeight(); y++) {
+			for(int x= 0; x < imageBuffer.getWidth(); x++) {
+				int pixel = pixels[y * imageBuffer.getWidth() + x];
+				buffer.put((byte) ((pixel >> 16) & 0xFF)); //RED VALUES
+				buffer.put((byte) ((pixel >> 8) & 0xFF)); //GREEN VALUES
+				buffer.put((byte) (pixel & 0xFF)); //BLUE VALUES
+				buffer.put((byte) ((pixel >> 24) & 0xFF)); //ALPHA VALUES
+
+			}
+		}
+		
+		buffer.flip();
+		
 		// load texture objects and setup parameters
 		int textureID = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageBuffer.getWidth(), imageBuffer.getHeight(), 0, GL_RGBA,
 				GL_UNSIGNED_BYTE, buffer);
 
 		if (isPowerOf2(imageBuffer.getWidth() * imageBuffer.getHeight())) {
+			System.out.println("Texture is power of 2");
 			glGenerateMipmap(GL_TEXTURE_2D);
+
 		} else {
+			System.out.println("Texture is not power of 2");	
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
+			
 		}
 
 		// load texture data
