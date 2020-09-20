@@ -98,18 +98,21 @@ public class Primitives {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageBuffer.getWidth(), imageBuffer.getHeight(), 0, GL_RGBA,
 				GL_UNSIGNED_BYTE, buffer);
 
+		glGenerateMipmap(GL_TEXTURE_2D); //generate low-res textures for textured object scaling
+
+		//setup texture parameters, interpolate image data where pixel data 
+		//doesn't align with texture coordinates when scaling
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	
+		//clamp texture to border of primitive
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
 		if (isPowerOf2(imageBuffer.getWidth() * imageBuffer.getHeight())) {
-			System.out.println("Texture is power of 2");
-			glGenerateMipmap(GL_TEXTURE_2D);
 
 		} else {
-			System.out.println("Texture is not power of 2");	
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			
+			//glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		}
 
 		// load texture data

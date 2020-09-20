@@ -40,9 +40,12 @@ public abstract class Rendering {
 
 	private void renderModels() {
 		glUseProgram(ShaderProgram.getProgram());
+		
+		//Window.resizeWindow(1080, 720);
+		
 		for (Model model : ModelManager.getModels()) {
 			// load shader variables and use shader program (also binds)
-			ShaderProgram.loadUniformVariables();
+			ShaderProgram.loadUniformVariables(model);
 			
 			glBindVertexArray(model.getVAOID());
 			glEnableVertexAttribArray(0);
@@ -50,7 +53,10 @@ public abstract class Rendering {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, model.getTextureID());
 			
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, model.getType().getIndexData().length, GL_UNSIGNED_INT, 0);
+			//glDrawArrays(GL_TRIANGLES, 0, model.getType().getVertexData().length);
+			
+			
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
 			glBindVertexArray(0);

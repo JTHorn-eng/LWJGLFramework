@@ -1,11 +1,13 @@
 package app;
 import org.lwjgl.*;
+
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
@@ -40,7 +42,7 @@ public class Window {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
 		// Create the window
-		window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+		window = glfwCreateWindow(1080, 720, "Hello World!", NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -50,6 +52,7 @@ public class Window {
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 		});
 
+		
 		// Get the thread stack and push a new frame
 		try ( MemoryStack stack = stackPush() ) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -57,16 +60,11 @@ public class Window {
 
 			// Get the window size passed to glfwCreateWindow
 			glfwGetWindowSize(window, pWidth, pHeight);
-
 			// Get the resolution of the primary monitor
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
 			// Center the window
-			glfwSetWindowPos(
-				window,
-				(vidmode.width() - pWidth.get(0)) / 2,
-				(vidmode.height() - pHeight.get(0)) / 2
-			);
+			
 		} // the stack frame is popped automatically
 
 		// Make the OpenGL context current
@@ -79,14 +77,13 @@ public class Window {
 		
 		
 		GL.createCapabilities();
+	
+		
 		
 
 	}
 
-	public static void resizeWindow(int i, int j) {
-		glfwSetWindowSize(window, i, j);
-	
-	}
+
 
 	public static void destroyWindow() {
 		// Free the window callbacks and destroy the window

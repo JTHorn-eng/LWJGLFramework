@@ -10,7 +10,6 @@ public class Framework extends Rendering {
 		System.out.println("Version: " + Version.getVersion());
 		Window.init();
 		Window.createWindow();
-		Window.resizeWindow(1080, 720);
 
 		// load models and associated shader programs
 		// load shaders first ! 
@@ -22,6 +21,7 @@ public class Framework extends Rendering {
 		}
 		
 		ModelManager.addModel(ModelType.SQUARE, "test");
+		
 		renderLoop();
 		
 

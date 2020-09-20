@@ -16,6 +16,10 @@ import static org.lwjgl.opengl.GL20.*;
 public class ShaderProgram {
 
 	private static int programId;
+	private static final String SAMPLER_LOCATION = "textureSampler";
+	private static final String VIEW_MATRIX_LOCATION = "viewMatrix";
+	
+	
 
 	public void createProgram(String vFilename, String fFilename) throws Exception {
 		// create a new shader program in OpenGL
@@ -39,6 +43,8 @@ public class ShaderProgram {
 		if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
 			throw new Exception("Error validating shader program: " + glGetShaderInfoLog(programId, 2048));
 		}
+		
+		loadAttribLocations();
 	}
 
 	private void loadAndCompileShaderProgram(String filename, int type) {
@@ -78,8 +84,19 @@ public class ShaderProgram {
 		return content;
 	}
 	
-	public static void loadUniformVariables() {
-		int samplerLocation = glGetUniformLocation(programId, "textureSampler");
+	public static void loadAttribLocations() {
+		glBindAttribLocation(programId, 0, "positions");
+		glBindAttribLocation(programId, 1, "textureData");
+
+	
+	}
+	
+	public static void loadUniformVariables(Model model) {
+		int samplerLocation = glGetUniformLocation(programId, SAMPLER_LOCATION);
+		int viewMatrixLocation = glGetUniformLocation(programId, VIEW_MATRIX_LOCATION);
+		
+		
+		glUniformMatrix4fv(viewMatrixLocation, false, model.getViewMatrix());
 		glUniform1i(samplerLocation, 0);
 	}
 	

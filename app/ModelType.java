@@ -5,7 +5,7 @@ public enum ModelType {
 	SQUARE(
 		  new float[] {-0.5f, 0.5f, 0f,
 						-0.5f, -0.5f, 0f,
-					   0.5f, -0.5f, 0f,
+					    0.5f, -0.5f, 0f,
 					   0.5f, 0.5f, 0f,
 
 					},

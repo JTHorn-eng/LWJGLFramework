@@ -13,11 +13,9 @@ public class App {
 	public static void main(String args[]) {
 		App app = new App();
 	}
-	
-	
-	
-	
-	
-	
-	
 }
+
+
+//THE PROBLEM LIES WITH LOADING VARIABLES
+//WITH OPENGL PROPERLY
+//REWRITE THE SHADER PROGRAM !!!
