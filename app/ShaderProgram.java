@@ -3,6 +3,7 @@ package app;
 import java.io.BufferedReader;
 
 import java.io.FileReader;
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -16,10 +17,8 @@ import static org.lwjgl.opengl.GL20.*;
 public class ShaderProgram {
 
 	private static int programId;
-	private static final String SAMPLER_LOCATION = "textureSampler";
-	private static final String VIEW_MATRIX_LOCATION = "viewMatrix";
-	
-	
+
+	private static HashMap<String, Integer> uniformLocations = new HashMap<>();
 
 	public void createProgram(String vFilename, String fFilename) throws Exception {
 		// create a new shader program in OpenGL
@@ -43,7 +42,7 @@ public class ShaderProgram {
 		if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
 			throw new Exception("Error validating shader program: " + glGetShaderInfoLog(programId, 2048));
 		}
-		
+
 		loadAttribLocations();
 	}
 
@@ -83,23 +82,29 @@ public class ShaderProgram {
 
 		return content;
 	}
-	
+
 	public static void loadAttribLocations() {
 		glBindAttribLocation(programId, 0, "positions");
 		glBindAttribLocation(programId, 1, "textureData");
 
-	
 	}
-	
-	public static void loadUniformVariables(Model model) {
-		int samplerLocation = glGetUniformLocation(programId, SAMPLER_LOCATION);
-		int viewMatrixLocation = glGetUniformLocation(programId, VIEW_MATRIX_LOCATION);
-		
-		
-		glUniformMatrix4fv(viewMatrixLocation, false, model.getViewMatrix());
-		glUniform1i(samplerLocation, 0);
+
+	public static void addUniformVariable(String name) {
+		uniformLocations.put(name, glGetUniformLocation(programId, name));
 	}
-	
+
+	public static void loadUniformVariables(Model model) throws UniformNotFoundException {
+		addUniformVariable("viewMatrix");
+		addUniformVariable("projMatrix");
+		addUniformVariable("transMatrix");
+		addUniformVariable("textureSampler");
+
+		glUniformMatrix4fv(uniformLocations.get("transMatrix"), false, model.getTransformMatrix());
+		glUniformMatrix4fv(uniformLocations.get("viewMatrix"), false, model.getViewMatrix());
+		glUniformMatrix4fv(uniformLocations.get("projMatrix"), false, Rendering.getProjMatrix());
+		glUniform1i(uniformLocations.get("textureSampler"), 0);
+	}
+
 	public void deleteShaderProgram() {
 		glUseProgram(0);
 		if (programId != 0) {

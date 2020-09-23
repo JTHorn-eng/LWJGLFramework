@@ -7,7 +7,7 @@ public class App {
 	public App() {
 		f = new Framework();
 		f.init();
-
+		//f.test();
 	}
 	
 	public static void main(String args[]) {
@@ -16,6 +16,3 @@ public class App {
 }
 
 
-//THE PROBLEM LIES WITH LOADING VARIABLES
-//WITH OPENGL PROPERLY
-//REWRITE THE SHADER PROGRAM !!!

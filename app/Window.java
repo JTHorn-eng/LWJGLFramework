@@ -15,7 +15,8 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
 
 	private static long window = 0;
-	 
+	private static int windowHeight = 1;
+	private static int windowWidth = 1;
 	
 	public static long getWindow() {
 		return window;
@@ -63,7 +64,10 @@ public class Window {
 			// Get the resolution of the primary monitor
 			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-			// Center the window
+			//Get window width and height
+			
+			
+			
 			
 		} // the stack frame is popped automatically
 
@@ -93,5 +97,14 @@ public class Window {
 		// Terminate GLFW and free the error callback
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
+	}
+	
+	public static int getWdth() {
+		return windowWidth;
+		
+	}
+	
+	public static int getHeight() {
+		return windowHeight;
 	}
 }

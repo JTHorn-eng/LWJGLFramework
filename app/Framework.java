@@ -21,12 +21,16 @@ public class Framework extends Rendering {
 		}
 		
 		ModelManager.addModel(ModelType.SQUARE, "test");
-		
+		calculateProjectionMatrix();
 		renderLoop();
 		
 
 		cleanUp();
 		Window.destroyWindow();
+	}
+	
+	public void test() {
+		OBJLoader.loadObjModel("stall");
 	}
 	
 	private void cleanUp() {
