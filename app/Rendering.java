@@ -1,6 +1,7 @@
 package app;
 
 import static org.lwjgl.opengl.GL11.*;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -8,7 +9,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
-import org.lwjgl.system.MemoryStack;
+import org.lwjgl.BufferUtils;
 
 /**
  * User overrides pre and post processing methods in Render mode - 2D (false) 3D
@@ -22,10 +23,12 @@ public abstract class Rendering {
 	public abstract void preRenderingEffects();
 	
 	private static float aspectRatio;
-	private static int fov = 70;
-	private static final float Z_NEAR_PLANE = 1f;
+	private static final int FOV = 70;
+	private static final float Z_NEAR_PLANE = 0.1f;
 	private static final float Z_FAR_PLANE = 100f;
 	private static FloatBuffer projMatrix = null;
+	private static FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
+
 	
 
 	private void clear() {
@@ -86,28 +89,11 @@ public abstract class Rendering {
 	}
 	
 	public static void calculateProjectionMatrix() {
-		aspectRatio = 16/9;
-		System.out.println("aspect Ratio: " + aspectRatio);
+		aspectRatio = 1280 / 720;
+		Matrix4f projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR_PLANE, Z_FAR_PLANE);
 		
-		float[] projectionMatrix =
-			{
-				(float) ((1 / Math.tan(fov / 2)) / aspectRatio), 0, 0, 0,
-				0, (float) (1 / Math.tan(fov / 2)), 0, 0,
-				0, 0, - (Z_FAR_PLANE + Z_NEAR_PLANE) / (Z_FAR_PLANE - Z_NEAR_PLANE), -1f,
-				0, 0,  -(2f* Z_FAR_PLANE * Z_NEAR_PLANE) / (Z_FAR_PLANE - Z_NEAR_PLANE), 0	
-			};
-		
-		
-		
-		Matrix4f matrix = new Matrix4f();
-		matrix.set(projectionMatrix);
-		MemoryStack stack = null;
-		stack = MemoryStack.stackPush();
-		FloatBuffer buffer = stack.mallocFloat(16);
-		matrix.get(buffer);
-		
-		buffer.flip();
-		projMatrix = buffer;
+		projectionMatrix.get(projectionMatrixBuffer);
+		projMatrix = projectionMatrixBuffer;
 	}
 	
 	

@@ -13,7 +13,9 @@ public class Model {
 	private ModelType type;
 	private Vector3f translation;
 	private float rotX, rotY, rotZ, scale;
-	private float[] viewMatrix = { 1.0f, 0f, 0f, 0f, 0f, 1.00f, 0f, 0f, 0f, 0f, 1.0f, 0f, 0f, 0f, 0f, 1.0f };
+	private FloatBuffer viewMatrixBuffer = BufferUtils.createFloatBuffer(16);
+	private FloatBuffer transformBuffer = BufferUtils.createFloatBuffer(16);
+
 
 	// generate new Model with 0 values for everything (except for scaling)
 	public Model(ModelType t, int vaoID, int textureID) {
@@ -21,7 +23,7 @@ public class Model {
 		this.vaoID = vaoID;
 		this.textureID = textureID;
 
-		translation = new Vector3f(0, 0, 0);
+		translation = new Vector3f(0.1f, 0, 0f);
 
 		rotX = 0;
 		rotY = 0;
@@ -50,41 +52,30 @@ public class Model {
 		this.textureID = textureID;
 	}
 
-	public FloatBuffer getVectorTrans() {
-		FloatBuffer b = BufferUtils.createFloatBuffer(3);
-		Vector3f v = new Vector3f();
-		v.x = 2f;
-		v.y = 2f;
-		v.z = 0.0f;
-		v.get(b);
-		b.flip();
-		return b;
 
-	}
 
 	public FloatBuffer getTransformMatrix() {
 		Matrix4f transform = new Matrix4f();
 
 		transform.identity().translate(translation).rotateX((float) Math.toRadians(rotX))
 				.rotateY((float) Math.toRadians(rotY)).rotateZ((float) Math.toRadians(rotZ)).scale(scale);
-
-		MemoryStack stack = null;
-		stack = MemoryStack.stackPush();
-		FloatBuffer fb = stack.mallocFloat(16);
-		transform.get(fb);
-		return fb;
+		
+		//transform.set(transform);
+	
+		transform.get(transformBuffer);
+	
+		return transformBuffer;
 
 	}
 
 	public FloatBuffer getViewMatrix() {
 		Matrix4f value = new Matrix4f();
-		value.set(viewMatrix);
-
-		MemoryStack stack = null;
-		stack = MemoryStack.stackPush();
-		FloatBuffer fb = stack.mallocFloat(16);
-		value.get(fb);
-		return fb;
+		//value.set(viewMatrix);
+		value.identity();
+		value.get(viewMatrixBuffer);
+		
+		
+		return viewMatrixBuffer;
 
 	}
 
