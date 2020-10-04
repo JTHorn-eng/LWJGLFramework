@@ -53,7 +53,7 @@ public class Primitives {
 	public static void storeVertexDataInAttributeList(ModelType type) {
 		int vboID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-		if (type == ModelType.OBJ_MODEL) {
+		if (type == ModelType.CUSTOM) {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfVertices()), GL_STATIC_DRAW);
 		} else {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getVertexData()), GL_STATIC_DRAW);
@@ -70,7 +70,7 @@ public class Primitives {
 		int vboID = glGenBuffers();
 		vboIDs.add(vboID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-		if (type == ModelType.OBJ_MODEL) {
+		if (type == ModelType.CUSTOM) {
 			glBufferData(GL_ARRAY_BUFFER, loadIBOInts(OBJLoader.getfIndices()), GL_STATIC_DRAW);
 		} else {
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(type.getIndexData()), GL_STATIC_DRAW);
@@ -130,11 +130,11 @@ public class Primitives {
 		// load texture data
 		int vboID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-		if (type == ModelType.OBJ_MODEL) {
+		if (type == ModelType.CUSTOM) {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getTextureData()), GL_STATIC_DRAW);
 		}
 		
-		if (type == ModelType.OBJ_MODEL) {
+		if (type == ModelType.CUSTOM) {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfTextureCoords()), GL_STATIC_DRAW);
 		} else {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getTextureData()), GL_STATIC_DRAW);
@@ -148,7 +148,7 @@ public class Primitives {
 
 	public static void loadOBJModel(String objFilename, String textureFilename) {
 		OBJLoader.loadObjModel(objFilename);
-		loadModel(ModelType.OBJ_MODEL, textureFilename);
+		loadModel(ModelType.CUSTOM, textureFilename);
 
 	}
 

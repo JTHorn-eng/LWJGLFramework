@@ -8,7 +8,7 @@ public enum ModelType {
 	 	    true
 	),
 	
-	OBJ_MODEL (null,
+	CUSTOM (null,
 			   null,
 			   null,
 			   true

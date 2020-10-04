@@ -9,6 +9,8 @@ import org.lwjgl.system.MemoryStack;
 
 public class Model {
 
+	
+
 	private int vaoID, textureID;
 	private ModelType type;
 	private Vector3f translation;
@@ -22,8 +24,9 @@ public class Model {
 		type = t;
 		this.vaoID = vaoID;
 		this.textureID = textureID;
-
-		translation = new Vector3f(0.1f, 0, 0f);
+		
+		//keep z coordinate  negative
+		translation = new Vector3f(0.1f, 0, -10f);
 
 		rotX = 0;
 		rotY = 0;
@@ -32,6 +35,35 @@ public class Model {
 		scale = 1.0f;
 	}
 
+	
+
+	public FloatBuffer getTransformMatrix() {
+		Matrix4f transform = new Matrix4f();
+
+		transform.identity().translate(translation).rotateX((float) Math.toRadians(rotX))
+				.rotateY((float) Math.toRadians(rotY)).rotateZ((float) Math.toRadians(rotZ)).scale(scale);
+		
+		//transform.set(transform);
+	
+		transform.get(transformBuffer);
+	
+		return transformBuffer;
+
+	}
+
+
+
+	public FloatBuffer getViewMatrix() {
+		Matrix4f value = new Matrix4f();
+		//value.set(viewMatrix);
+		value.identity();
+		value.get(viewMatrixBuffer);
+		
+		
+		return viewMatrixBuffer;
+
+	}
+	
 	public ModelType getType() {
 		return type;
 	}
@@ -52,31 +84,64 @@ public class Model {
 		this.textureID = textureID;
 	}
 
-
-
-	public FloatBuffer getTransformMatrix() {
-		Matrix4f transform = new Matrix4f();
-
-		transform.identity().translate(translation).rotateX((float) Math.toRadians(rotX))
-				.rotateY((float) Math.toRadians(rotY)).rotateZ((float) Math.toRadians(rotZ)).scale(scale);
-		
-		//transform.set(transform);
-	
-		transform.get(transformBuffer);
-	
-		return transformBuffer;
-
+	public void setZ(float z) {
+		this.translation.z = z;
+	}
+	public Vector3f getTranslation() {
+		return translation;
 	}
 
-	public FloatBuffer getViewMatrix() {
-		Matrix4f value = new Matrix4f();
-		//value.set(viewMatrix);
-		value.identity();
-		value.get(viewMatrixBuffer);
-		
-		
-		return viewMatrixBuffer;
 
+
+	public void setTranslation(Vector3f translation) {
+		this.translation = translation;
 	}
 
+
+
+	public float getRotX() {
+		return rotX;
+	}
+
+
+
+	public void setRotX(float rotX) {
+		this.rotX = rotX;
+	}
+
+
+
+	public float getRotY() {
+		return rotY;
+	}
+
+
+
+	public void setRotY(float rotY) {
+		this.rotY = rotY;
+	}
+
+
+
+	public float getRotZ() {
+		return rotZ;
+	}
+
+
+
+	public void setRotZ(float rotZ) {
+		this.rotZ = rotZ;
+	}
+
+
+
+	public float getScale() {
+		return scale;
+	}
+
+
+
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
 }

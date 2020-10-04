@@ -1,6 +1,7 @@
 package app;
 import org.lwjgl.*;
 
+
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -15,19 +16,10 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
 
 	private static long window = 0;
-	private static int windowHeight = 1;
-	private static int windowWidth = 1;
-	
-	public static long getWindow() {
-		return window;
-	}
-
-	public static void init() {
-		System.out.println("Hello LWJGL " + Version.getVersion() + "!");
-
-	}
-
+	private static FrameworkProperties fp = FrameworkProperties.genProperties();
 	public static void createWindow() {
+		
+		
 		
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -43,7 +35,7 @@ public class Window {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
 		// Create the window
-		window = glfwCreateWindow(1080, 720, "Hello World!", NULL, NULL);
+		window = glfwCreateWindow(fp.getWidth(), fp.getHeight() ,fp.getWindowTitle() , NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -61,12 +53,6 @@ public class Window {
 
 			// Get the window size passed to glfwCreateWindow
 			glfwGetWindowSize(window, pWidth, pHeight);
-			// Get the resolution of the primary monitor
-			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-			//Get window width and height
-			
-			
 			
 			
 		} // the stack frame is popped automatically
@@ -81,13 +67,15 @@ public class Window {
 		
 		
 		GL.createCapabilities();
-	
-		
-		
-
 	}
 
 
+	public static void resizeWindow() {
+		glfwSetWindowSize(window, fp.getWidth(), fp.getHeight());
+		glViewport(0,0,fp.getWidth(), fp.getHeight());
+	}
+	
+	
 
 	public static void destroyWindow() {
 		// Free the window callbacks and destroy the window
@@ -99,12 +87,7 @@ public class Window {
 		glfwSetErrorCallback(null).free();
 	}
 	
-	public static int getWdth() {
-		return windowWidth;
-		
-	}
-	
-	public static int getHeight() {
-		return windowHeight;
+	public static long getWindow() {
+		return window;
 	}
 }

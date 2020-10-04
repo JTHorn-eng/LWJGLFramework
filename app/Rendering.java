@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import java.nio.FloatBuffer;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 /**
@@ -28,7 +29,7 @@ public abstract class Rendering {
 	private static final float Z_FAR_PLANE = 100f;
 	private static FloatBuffer projMatrix = null;
 	private static FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
-
+	private static boolean renderingMode = false;
 	
 
 	private void clear() {
@@ -41,7 +42,8 @@ public abstract class Rendering {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-	public void renderLoop() {
+	public void render() {
+		calculateProjectionMatrix(false);
 		while (!glfwWindowShouldClose(Window.getWindow())) {
 			clear();
 			
@@ -55,9 +57,15 @@ public abstract class Rendering {
 	private void renderModels() {
 		glUseProgram(ShaderProgram.getProgram());
 		
-		//Window.resizeWindow(1080, 720);
+		Window.resizeWindow();
 		
-		for (Model model : ModelManager.getModels()) {
+		
+		for (Model model : ModelManager.getModels().values()) {
+			
+			//for 2D rendering mode force all z-coords to 0
+			model.setZ(0);
+			
+			
 			// load shader variables and use shader program (also binds)
 			try {
 				ShaderProgram.loadUniformVariables(model);
@@ -88,10 +96,16 @@ public abstract class Rendering {
 
 	}
 	
-	public static void calculateProjectionMatrix() {
+	public static void calculateProjectionMatrix(boolean renderingMode) {
 		aspectRatio = 1280 / 720;
-		Matrix4f projectionMatrix = new Matrix4f().perspective(FOV, aspectRatio, Z_NEAR_PLANE, Z_FAR_PLANE);
-		
+		Matrix4f projectionMatrix = null;
+		if (renderingMode) {
+			projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(FOV), aspectRatio, Z_NEAR_PLANE, Z_FAR_PLANE);
+			
+		} else {
+			projectionMatrix = new Matrix4f().identity();
+				
+		}
 		projectionMatrix.get(projectionMatrixBuffer);
 		projMatrix = projectionMatrixBuffer;
 	}

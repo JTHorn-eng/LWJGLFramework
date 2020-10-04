@@ -1,22 +1,45 @@
 package app;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.joml.Vector3f;
 
 
 
 public class ModelManager {
 
-	private static ArrayList<Model> models = new ArrayList<>();
-	
-	public static void addModel(ModelType type, String textureName) {
+	private static HashMap<String, Model> models = new HashMap<>();
+
+	/**
+	 * 
+	 * @param modelName - name of the model
+	 * @param type      - use a predefined shape or custom model ModelType.CUSTOM
+	 * @param textureName
+	 */
+	public static void addModel(String modelName, ModelType type, String textureName) {
 		
 		//load model data into VBOs and store vaoID in a new model
 		Model model = Primitives.loadModel(type, textureName);
-		models.add(model);
+		models.put(modelName, model);
+	}
+	
+	public static void addModel(String modelName, ModelType type, String textureName, Vector3f position, Vector3f rotation, float scale) {
+		
+		//load model data into VBOs and store vaoID in a new model
+		Model model = Primitives.loadModel(type, textureName);
+		
+		model.setRotX(rotation.x);
+		model.setRotY(rotation.y);
+		model.setRotZ(rotation.z);
+		
+		model.setTranslation(position);
+		model.setScale(scale);
+	
+		models.put(modelName, model);
 	}
 
 	
-	public static ArrayList<Model> getModels() {
+	public static HashMap<String, Model> getModels() {
 		return models;
 	}
 	
