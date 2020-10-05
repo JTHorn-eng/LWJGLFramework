@@ -29,8 +29,8 @@ public abstract class Rendering {
 	private static final float Z_FAR_PLANE = 100f;
 	private static FloatBuffer projMatrix = null;
 	private static FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
-	private static boolean renderingMode = false;
-	
+	private static boolean renderingMode = false; //2D or 3D
+	private static boolean indexed = false;
 
 	private void clear() {
 
@@ -57,7 +57,7 @@ public abstract class Rendering {
 	private void renderModels() {
 		glUseProgram(ShaderProgram.getProgram());
 		
-		Window.resizeWindow();
+	
 		
 		
 		for (Model model : ModelManager.getModels().values()) {
@@ -79,10 +79,17 @@ public abstract class Rendering {
 			glBindTexture(GL_TEXTURE_2D, model.getTextureID());
 			
 			//true for indexed rendering
-			if (model.getType().getRenderMode()) {
-				glDrawElements(GL_TRIANGLES, model.getType().getIndexData().length, GL_UNSIGNED_INT, 0);			
+			
+			if (indexed) {
+				if (model.getType().equals(ModelType.CUSTOM)) {
+					glDrawElements(GL_TRIANGLES,model.getData().getIndexData().length , GL_UNSIGNED_INT, 0);			
+
+				} else {
+					glDrawElements(GL_TRIANGLES, model.getData().getIndexData().length, GL_UNSIGNED_INT, 0);			
+					
+				}
 			} else {
-				glDrawArrays(GL_TRIANGLES, 0, model.getType().getVertexData().length);
+				glDrawArrays(GL_TRIANGLES, 0, model.getData().getVertexData().length);
 				
 			}
 				

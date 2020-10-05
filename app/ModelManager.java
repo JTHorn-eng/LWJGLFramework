@@ -12,21 +12,34 @@ public class ModelManager {
 
 	/**
 	 * 
-	 * @param modelName - name of the model
+	 * @param modelName - name of the model, use OBJ filename is using custom model
 	 * @param type      - use a predefined shape or custom model ModelType.CUSTOM
 	 * @param textureName
 	 */
 	public static void addModel(String modelName, ModelType type, String textureName) {
 		
-		//load model data into VBOs and store vaoID in a new model
-		Model model = Primitives.loadModel(type, textureName);
-		models.put(modelName, model);
+		if (!type.equals(ModelType.CUSTOM)) {
+			//load model data into VBOs and store vaoID in a new model
+			Model model = Primitives.loadModel(type, textureName);
+			
+			models.put(modelName, model);
+		} else {
+			Model model = Primitives.loadOBJModel(modelName, textureName);
+			models.put(modelName, model);
+		}
 	}
 	
 	public static void addModel(String modelName, ModelType type, String textureName, Vector3f position, Vector3f rotation, float scale) {
 		
 		//load model data into VBOs and store vaoID in a new model
-		Model model = Primitives.loadModel(type, textureName);
+		Model model;
+		
+		if (!type.equals(ModelType.CUSTOM)) {
+			//load model data into VBOs and store vaoID in a new model
+			model = Primitives.loadModel(type, textureName);
+		} else {
+			 model = Primitives.loadOBJModel(modelName, textureName);
+		}
 		
 		model.setRotX(rotation.x);
 		model.setRotY(rotation.y);
@@ -34,10 +47,12 @@ public class ModelManager {
 		
 		model.setTranslation(position);
 		model.setScale(scale);
-	
 		models.put(modelName, model);
 	}
-
+	
+	public static void addModel(String modelName, String objFile,  String textureName) {
+		
+	}
 	
 	public static HashMap<String, Model> getModels() {
 		return models;

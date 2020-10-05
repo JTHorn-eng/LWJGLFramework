@@ -39,6 +39,10 @@ public abstract class Framework extends Rendering {
 		ModelManager.addModel(modelName, type, textureName, position, rotation, scale);
 
 	}
+	
+	public static void addModel(String modelName, String objModelName, String textureName) {
+		ModelManager.addModel(modelName, objModelName, textureName);
+	}
 
 	public void test() {
 		OBJLoader.loadObjModel("stall");

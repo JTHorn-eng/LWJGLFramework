@@ -5,14 +5,15 @@ public class FrameworkProperties {
 
 	private static FrameworkProperties properties = null;
 	private String windowTitle = "Application";
-	private int width = 720;
-	private int height = 1280;
+	private int width = 1280;
+	private int height = 720;
 	private boolean renderingMode = false;
-	
 	private FrameworkProperties() {
 		
 	}
 	
+	
+
 	public static FrameworkProperties genProperties() {
 		if (properties == null) {
 			properties = new FrameworkProperties();

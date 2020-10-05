@@ -17,6 +17,8 @@ public class Window {
 
 	private static long window = 0;
 	private static FrameworkProperties fp = FrameworkProperties.genProperties();
+	private static GLFWWindowSizeCallback sizeCallback;
+	
 	public static void createWindow() {
 		
 		
@@ -44,6 +46,19 @@ public class Window {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 		});
+		
+		sizeCallback = new GLFWWindowSizeCallback() {
+			
+			@Override
+			public void invoke(long window, int w, int h) {
+				glViewport(0, 0, w, h);
+				fp.setWidth(w);
+				fp.setHeight(h);
+				System.out.println("Resize window"
+						+ ".");
+			}
+			
+		};
 
 		
 		// Get the thread stack and push a new frame
@@ -67,15 +82,12 @@ public class Window {
 		
 		
 		GL.createCapabilities();
+		
+		//context must be created before generating this callback
+		glfwSetWindowSizeCallback(window, sizeCallback);
+
 	}
 
-
-	public static void resizeWindow() {
-		glfwSetWindowSize(window, fp.getWidth(), fp.getHeight());
-		glViewport(0,0,fp.getWidth(), fp.getHeight());
-	}
-	
-	
 
 	public static void destroyWindow() {
 		// Free the window callbacks and destroy the window

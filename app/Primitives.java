@@ -25,6 +25,7 @@ public class Primitives {
 	private static final int BYTES_PER_PIXEL = 4;
 
 	public static Model loadModel(ModelType type, String textureName) {
+		ModelData data = new ModelData();
 
 		// load VAO
 		int vaoID = glGenVertexArrays();
@@ -32,13 +33,13 @@ public class Primitives {
 		glBindVertexArray(vaoID);
 
 		// load data into VBOs
-		storeVertexDataInAttributeList(type);
-		bindIndicesBuffer(type);
+		storeVertexDataInAttributeList(type, data);
+		bindIndicesBuffer(type, data);
 
 		// load texture if specified
 		if (!(textureName.equals(""))) {
 			try {
-				textureID = loadTexture(type, textureName);
+				textureID = loadTexture(type, textureName, data);
 			} catch (IOException e) {
 				System.err.print(e.getLocalizedMessage());
 			}
@@ -47,17 +48,20 @@ public class Primitives {
 		// Unbind VAO after using it
 		glBindVertexArray(0);
 		vaoIDs.add(vaoID);
-		return new Model(type, vaoID, textureID);
+		return new Model(type, vaoID, textureID, data);
 	}
 
-	public static void storeVertexDataInAttributeList(ModelType type) {
+	public static void storeVertexDataInAttributeList(ModelType type, ModelData data) {
 		int vboID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-		if (type == ModelType.CUSTOM) {
+		if (type.equals(ModelType.CUSTOM)) {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfVertices()), GL_STATIC_DRAW);
+			data.setVertexData(OBJLoader.getfVertices());
+
 		} else {
+
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getVertexData()), GL_STATIC_DRAW);
-			
+			data.setVertexData(type.getVertexData());
 		}
 		// store vertex data in attribute number 0
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
@@ -66,20 +70,22 @@ public class Primitives {
 
 	}
 
-	public static void bindIndicesBuffer(ModelType type) {
+	public static void bindIndicesBuffer(ModelType type, ModelData data) {
 		int vboID = glGenBuffers();
 		vboIDs.add(vboID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-		if (type == ModelType.CUSTOM) {
+		if (type.equals(ModelType.CUSTOM)) {
 			glBufferData(GL_ARRAY_BUFFER, loadIBOInts(OBJLoader.getfIndices()), GL_STATIC_DRAW);
+			data.setIndexData(OBJLoader.getfIndices());
 		} else {
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(type.getIndexData()), GL_STATIC_DRAW);
-			
+			data.setIndexData(type.getIndexData());
+
 		}
 		// NEVER UNBIND THE INDEX BUFFER !!!
 	}
 
-	public static int loadTexture(ModelType type, String fileName) throws IOException {
+	public static int loadTexture(ModelType type, String fileName, ModelData data) throws IOException {
 
 		// load image data
 		BufferedImage imageBuffer = ImageIO.read(new File("images/" + fileName + ".png"));
@@ -121,24 +127,17 @@ public class Primitives {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		if (isPowerOf2(imageBuffer.getWidth() * imageBuffer.getHeight())) {
-
-		} else {
-			// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-		}
-
 		// load texture data
 		int vboID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-		if (type == ModelType.CUSTOM) {
-			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getTextureData()), GL_STATIC_DRAW);
-		}
-		
-		if (type == ModelType.CUSTOM) {
+
+		if (type.equals(ModelType.CUSTOM)) {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfTextureCoords()), GL_STATIC_DRAW);
+			data.setTextureData(OBJLoader.getfTextureCoords());
 		} else {
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getTextureData()), GL_STATIC_DRAW);
-			
+			data.setTextureData(type.getTextureData());
+
 		}
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 
@@ -146,15 +145,15 @@ public class Primitives {
 
 	}
 
-	public static void loadOBJModel(String objFilename, String textureFilename) {
+	public static Model loadOBJModel(String objFilename, String textureFilename) {
 		OBJLoader.loadObjModel(objFilename);
-		loadModel(ModelType.CUSTOM, textureFilename);
+		return loadModel(ModelType.CUSTOM, textureFilename);
 
 	}
 
-	private static boolean isPowerOf2(int num) {
-		return ((num & (num - 1)) == 1) && (num > 1);
-	}
+	// private static boolean isPowerOf2(int num) {
+	// return ((num & (num - 1)) == 1) && (num > 1);
+	// }
 
 	private static FloatBuffer loadVBOFloats(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);

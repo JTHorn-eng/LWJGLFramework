@@ -14,6 +14,7 @@ public class App extends Framework{
 	
 	public App() {
 		init();
+		Framework.addModel("test", "stall" , "test");
 		render();
 		close();
 	}
