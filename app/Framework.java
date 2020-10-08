@@ -28,16 +28,25 @@ public abstract class Framework extends Rendering {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		addCamera("default");
+
 	}
 
 	public static void addModel(String modelName, ModelType type, String textureName) {
-		ModelManager.addModel(modelName, type, textureName);
+		EntityManager.addModel(modelName, type, textureName);
 	}
 
 	public static void addModel(String modelName, ModelType type, String textureName, Vector3f position,
 			Vector3f rotation, float scale) {
-		ModelManager.addModel(modelName, type, textureName, position, rotation, scale);
+		EntityManager.addModel(modelName, type, textureName, position, rotation, scale);
 
+	}
+	public static void addCamera(String name) {
+		EntityManager.addCamera(name);
+	}
+	
+	public static Model selectModel(String modelName) {
+		return EntityManager.getModel(modelName);
 	}
 
 

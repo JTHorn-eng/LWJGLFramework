@@ -9,51 +9,61 @@ import org.lwjgl.system.MemoryStack;
 
 public class Model {
 
+	private float r,g,b;
+	private int texture = 1;
 	private int vaoID, textureID;
 	private ModelType type;
-	private Vector3f translation;
+	private float x, y, z;
 	private float rotX, rotY, rotZ, scale;
-	private FloatBuffer viewMatrixBuffer = BufferUtils.createFloatBuffer(16);
 	private FloatBuffer transformBuffer = BufferUtils.createFloatBuffer(16);
 	private ModelData data;
 
 	// generate new Model with 0 values for everything (except for scaling)
 	public Model(ModelType t, int vaoID, int textureID, ModelData data) {
+	
+		//set base colour
+		r = 255;
+		g = 255;
+		b = 255;
+		
+		
 		type = t;
 		this.vaoID = vaoID;
 		this.textureID = textureID;
 
 		// keep z coordinate negative
-		translation = new Vector3f(0.1f, 0, -10f);
-
+		x = 0;
+		y = 0;
+		z = -1f;
 		rotX = 0;
 		rotY = 0;
 		rotZ = 0;
+		
 
 		scale = 1.0f;
 		this.data = data;
 	}
-
+	
+	public int isTexture() {
+		return texture;
+	}
+	
+	public FloatBuffer getBaseColour() {
+		FloatBuffer colour = BufferUtils.createFloatBuffer(3);
+		Vector3f color = new Vector3f(r,g,b);
+		color.get(colour);
+		return colour;
+	}
 	public FloatBuffer getTransformMatrix() {
 		Matrix4f transform = new Matrix4f();
 
-		transform.identity().translate(translation).rotateX((float) Math.toRadians(rotX))
+		transform.identity().translate(new Vector3f(x, y, z)).rotateX((float) Math.toRadians(rotX))
 				.rotateY((float) Math.toRadians(rotY)).rotateZ((float) Math.toRadians(rotZ)).scale(scale);
 
 		// transform.set(transform);
 		transform.get(transformBuffer);
 
 		return transformBuffer;
-
-	}
-
-	public FloatBuffer getViewMatrix() {
-		Matrix4f value = new Matrix4f();
-		// value.set(viewMatrix);
-		value.identity();
-		value.get(viewMatrixBuffer);
-
-		return viewMatrixBuffer;
 
 	}
 
@@ -77,23 +87,11 @@ public class Model {
 		this.textureID = textureID;
 	}
 
-	public void setZ(float z) {
-		this.translation.z = z;
-	}
-
-	public Vector3f getTranslation() {
-		return translation;
-	}
-
-	public void setTranslation(Vector3f translation) {
-		this.translation = translation;
-	}
-
 	public float getRotX() {
 		return rotX;
 	}
 
-	public void setRotX(float rotX) {
+	public void rotX(float rotX) {
 		this.rotX = rotX;
 	}
 
@@ -101,15 +99,39 @@ public class Model {
 		return rotY;
 	}
 
-	public void setRotY(float rotY) {
+	public void rotY(float rotY) {
 		this.rotY = rotY;
+	}
+
+	public float getX() {
+		return x;
+	}
+
+	public void x(float x) {
+		this.x = x;
+	}
+
+	public float getY() {
+		return y;
+	}
+
+	public void y(float y) {
+		this.y = y;
+	}
+
+	public float getZ() {
+		return z;
+	}
+
+	public void z(float z) {
+		this.z = z;
 	}
 
 	public float getRotZ() {
 		return rotZ;
 	}
 
-	public void setRotZ(float rotZ) {
+	public void rotZ(float rotZ) {
 		this.rotZ = rotZ;
 	}
 
@@ -120,7 +142,7 @@ public class Model {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
-	
+
 	public ModelData getData() {
 		return data;
 	}

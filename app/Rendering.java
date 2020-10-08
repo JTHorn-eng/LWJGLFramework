@@ -21,7 +21,7 @@ public abstract class Rendering {
 
 	public abstract void postRendering();
 
-	public abstract void preRenderingEffects();
+	public abstract void preRendering();
 	
 	private static float aspectRatio;
 	private static final int FOV = 70;
@@ -46,26 +46,31 @@ public abstract class Rendering {
 		calculateProjectionMatrix();
 		while (!glfwWindowShouldClose(Window.getWindow())) {
 			clear();
-			renderModels();
+			try {
+				renderModels();
+			} catch (NoCameraException e) {
+				System.err.println(e);
+			}
 			glfwSwapBuffers(Window.getWindow());
 			glfwPollEvents();
 		}
 	}
 
-	private void renderModels() {
+	private void renderModels() throws NoCameraException {
+		preRendering();
 		glUseProgram(ShaderProgram.getProgram());
-		for (Model model : ModelManager.getModels().values()) {
+		for (Model model : EntityManager.getModels().values()) {
 			
 			//for 2D rendering mode force all z-coords to 0
 			if (!fp.getRenderingMode()) {
-				model.setZ(0);
+				model.z(0);
 				
 			}
 
 			
 			// load shader variables and use shader program (also binds)
 			try {
-				ShaderProgram.loadUniformVariables(model);
+				ShaderProgram.loadUniformVariables(model, EntityManager.getCurrentCamera());
 			} catch (UniformNotFoundException e) {
 				System.out.println(e.getLocalizedMessage());
 			}
@@ -87,6 +92,7 @@ public abstract class Rendering {
 			glBindVertexArray(0);
 		}
 		glUseProgram(0);
+		postRendering();
 
 	}
 	

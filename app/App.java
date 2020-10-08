@@ -11,7 +11,16 @@ import org.joml.Vector3f;
 
 
 //TODO
-//FIX OBJ LOADER
+
+//Basic lighting
+//No Texture models (coloured models only)
+//Controllers for models + cameras
+//Using custom shaders
+//GUIs - Menus, clickables, not sure what else !!!
+//Audio engine
+
+
+
 
 public class App extends Framework{
 
@@ -20,12 +29,8 @@ public class App extends Framework{
 	public App() {
 		init();
 		fp.setRenderingMode(true);
-		Framework.addModel("stall",ModelType.CUSTOM , "test");
-		//Framework.addModel("st", ModelType.CUSTOM, "test");
-		//ModelManager.getModels().get("stall").setTranslation(new Vector3f(0, 0, 0f));
-		
-		//Framework.addModel("test", ModelType.SQUARE, "test");
-		ModelManager.getModels().get("stall").setTranslation(new Vector3f(0, 0, -40f));
+		addModel("stall",ModelType.CUSTOM , "test");
+		selectModel("stall").z(-30f);
 		render();
 		close();
 	}
@@ -41,7 +46,7 @@ public class App extends Framework{
 	}
 
 	@Override
-	public void preRenderingEffects() {
+	public void preRendering() {
 		// TODO Auto-generated method stub
 		
 	}

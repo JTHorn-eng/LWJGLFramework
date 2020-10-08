@@ -93,16 +93,21 @@ public class ShaderProgram {
 		uniformLocations.put(name, glGetUniformLocation(programId, name));
 	}
 
-	public static void loadUniformVariables(Model model) throws UniformNotFoundException {
+	public static void loadUniformVariables(Model model, Camera camera) throws UniformNotFoundException {
 		addUniformVariable("viewMatrix");
 		addUniformVariable("projMatrix");
 		addUniformVariable("transMatrix");
 		addUniformVariable("textureSampler");
+		addUniformVariable("baseColour");
+		addUniformVariable("isTexture");
 
+
+		glUniform3fv(uniformLocations.get("baseColour"), model.getBaseColour());
 		glUniformMatrix4fv(uniformLocations.get("transMatrix"), false, model.getTransformMatrix());
-		glUniformMatrix4fv(uniformLocations.get("viewMatrix"), false, model.getViewMatrix());
+		glUniformMatrix4fv(uniformLocations.get("viewMatrix"), false, camera.calculateViewMatrix());
 		glUniformMatrix4fv(uniformLocations.get("projMatrix"), false, Rendering.getProjMatrix());
 		glUniform1i(uniformLocations.get("textureSampler"), 0);
+		glUniform1i(uniformLocations.get("isTexture"), model.isTexture());
 	}
 
 	public void deleteShaderProgram() {
