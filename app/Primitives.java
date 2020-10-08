@@ -55,13 +55,14 @@ public class Primitives {
 		int vboID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		if (type.equals(ModelType.CUSTOM)) {
-			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfVertices()), GL_STATIC_DRAW);
 			data.setVertexData(OBJLoader.getfVertices());
+			
+			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfVertices()), GL_STATIC_DRAW);
 
 		} else {
+			data.setVertexData(type.getVertexData());
 
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getVertexData()), GL_STATIC_DRAW);
-			data.setVertexData(type.getVertexData());
 		}
 		// store vertex data in attribute number 0
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
@@ -75,11 +76,13 @@ public class Primitives {
 		vboIDs.add(vboID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
 		if (type.equals(ModelType.CUSTOM)) {
-			glBufferData(GL_ARRAY_BUFFER, loadIBOInts(OBJLoader.getfIndices()), GL_STATIC_DRAW);
 			data.setIndexData(OBJLoader.getfIndices());
+
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(OBJLoader.getfIndices()), GL_STATIC_DRAW);
 		} else {
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(type.getIndexData()), GL_STATIC_DRAW);
 			data.setIndexData(type.getIndexData());
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(type.getIndexData()), GL_STATIC_DRAW);
+		
 
 		}
 		// NEVER UNBIND THE INDEX BUFFER !!!
@@ -132,11 +135,13 @@ public class Primitives {
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 
 		if (type.equals(ModelType.CUSTOM)) {
-			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfTextureCoords()), GL_STATIC_DRAW);
 			data.setTextureData(OBJLoader.getfTextureCoords());
+			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfTextureCoords()), GL_STATIC_DRAW);
+			
 		} else {
-			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getTextureData()), GL_STATIC_DRAW);
 			data.setTextureData(type.getTextureData());
+
+			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getTextureData()), GL_STATIC_DRAW);
 
 		}
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);

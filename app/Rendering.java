@@ -29,9 +29,9 @@ public abstract class Rendering {
 	private static final float Z_FAR_PLANE = 100f;
 	private static FloatBuffer projMatrix = null;
 	private static FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
-	private static boolean renderingMode = false; //2D or 3D
-	private static boolean indexed = false;
-
+	private static boolean indexed = true;
+	private static FrameworkProperties fp = FrameworkProperties.genProperties();
+	
 	private void clear() {
 
 		// LWJGL detects the context in the current thread
@@ -43,12 +43,10 @@ public abstract class Rendering {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	public void render() {
-		calculateProjectionMatrix(false);
+		calculateProjectionMatrix();
 		while (!glfwWindowShouldClose(Window.getWindow())) {
 			clear();
-			
 			renderModels();
-			
 			glfwSwapBuffers(Window.getWindow());
 			glfwPollEvents();
 		}
@@ -56,15 +54,14 @@ public abstract class Rendering {
 
 	private void renderModels() {
 		glUseProgram(ShaderProgram.getProgram());
-		
-	
-		
-		
 		for (Model model : ModelManager.getModels().values()) {
 			
 			//for 2D rendering mode force all z-coords to 0
-			model.setZ(0);
-			
+			if (!fp.getRenderingMode()) {
+				model.setZ(0);
+				
+			}
+
 			
 			// load shader variables and use shader program (also binds)
 			try {
@@ -79,22 +76,12 @@ public abstract class Rendering {
 			glBindTexture(GL_TEXTURE_2D, model.getTextureID());
 			
 			//true for indexed rendering
-			
 			if (indexed) {
-				if (model.getType().equals(ModelType.CUSTOM)) {
 					glDrawElements(GL_TRIANGLES,model.getData().getIndexData().length , GL_UNSIGNED_INT, 0);			
-
-				} else {
-					glDrawElements(GL_TRIANGLES, model.getData().getIndexData().length, GL_UNSIGNED_INT, 0);			
-					
-				}
 			} else {
 				glDrawArrays(GL_TRIANGLES, 0, model.getData().getVertexData().length);
 				
 			}
-				
-			
-			
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
 			glBindVertexArray(0);
@@ -103,10 +90,12 @@ public abstract class Rendering {
 
 	}
 	
-	public static void calculateProjectionMatrix(boolean renderingMode) {
+	public static void calculateProjectionMatrix() {
+		
+		
 		aspectRatio = 1280 / 720;
 		Matrix4f projectionMatrix = null;
-		if (renderingMode) {
+		if (fp.getRenderingMode()) {
 			projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(FOV), aspectRatio, Z_NEAR_PLANE, Z_FAR_PLANE);
 			
 		} else {

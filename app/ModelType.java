@@ -9,12 +9,10 @@ public enum ModelType {
 	),
 	
 	CUSTOM (null,
-			   null,
-			   null,
-			   true
+			null,
+			null,
+			true
 	);
-	
-	
 	
 	private final float[] vertexData;
 	private final int[] indexData;
@@ -27,7 +25,6 @@ public enum ModelType {
 		textureData = textureVertices;
 		this.renderMode = renderMode;	
 	}
-	
 	public boolean getRenderMode() {
 		return renderMode;
 	}

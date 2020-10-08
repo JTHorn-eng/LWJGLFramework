@@ -17,7 +17,7 @@ public abstract class Framework extends Rendering {
 		System.out.println("Init framework");
 		System.out.println("Version: " + Version.getVersion());
 		FrameworkProperties fp = FrameworkProperties.genProperties();
-
+		
 		Window.createWindow();
 
 		// load models and associated shader programs
@@ -39,14 +39,7 @@ public abstract class Framework extends Rendering {
 		ModelManager.addModel(modelName, type, textureName, position, rotation, scale);
 
 	}
-	
-	public static void addModel(String modelName, String objModelName, String textureName) {
-		ModelManager.addModel(modelName, objModelName, textureName);
-	}
 
-	public void test() {
-		OBJLoader.loadObjModel("stall");
-	}
 
 	public static void close() {
 		Primitives.cleanUp();

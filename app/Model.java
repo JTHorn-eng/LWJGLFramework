@@ -41,7 +41,6 @@ public class Model {
 				.rotateY((float) Math.toRadians(rotY)).rotateZ((float) Math.toRadians(rotZ)).scale(scale);
 
 		// transform.set(transform);
-
 		transform.get(transformBuffer);
 
 		return transformBuffer;

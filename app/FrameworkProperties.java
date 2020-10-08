@@ -55,4 +55,7 @@ public class FrameworkProperties {
 	public void setRenderingMode(boolean renderingMode) {
 		this.renderingMode = renderingMode;
 	}
+	public boolean getRenderingMode() {
+		return renderingMode;
+	}
 }

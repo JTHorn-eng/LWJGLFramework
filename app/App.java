@@ -1,5 +1,6 @@
 package app;
 
+import org.joml.Vector3f;
 
 //init framework
 //define custom shaders
@@ -8,13 +9,23 @@ package app;
 //render them
 //once finished close the framework
 
+
+//TODO
+//FIX OBJ LOADER
+
 public class App extends Framework{
 
 	FrameworkProperties fp = FrameworkProperties.genProperties();
 	
 	public App() {
 		init();
-		Framework.addModel("test", "stall" , "test");
+		fp.setRenderingMode(true);
+		Framework.addModel("stall",ModelType.CUSTOM , "test");
+		//Framework.addModel("st", ModelType.CUSTOM, "test");
+		//ModelManager.getModels().get("stall").setTranslation(new Vector3f(0, 0, 0f));
+		
+		//Framework.addModel("test", ModelType.SQUARE, "test");
+		ModelManager.getModels().get("stall").setTranslation(new Vector3f(0, 0, -40f));
 		render();
 		close();
 	}
