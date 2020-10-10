@@ -1,10 +1,11 @@
-package app;
+package entities;
 
 public class ModelData {
 	
 	private float[] vertexData;
 	private int[] indexData;
 	private float[] textureData;
+	private float[] normalData;
 	private boolean renderMode;
 	
 	public float[] getVertexData() {
@@ -24,6 +25,12 @@ public class ModelData {
 	}
 	public void setTextureData(float[] textureData) {
 		this.textureData = textureData;
+	}
+	public void setNormalData(float[] normalData) {
+		this.normalData = normalData;
+	}
+	public float[] getNormalData() {
+		return normalData;
 	}
 	public boolean isRenderMode() {
 		return renderMode;

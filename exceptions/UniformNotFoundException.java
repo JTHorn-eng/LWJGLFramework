@@ -1,4 +1,4 @@
-package app;
+package exceptions;
 
 public class UniformNotFoundException extends Exception {
 

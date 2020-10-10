@@ -12,6 +12,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
+import entities.EntityManager;
+import entities.LightManager;
+import entities.Model;
+import exceptions.NoCameraException;
+import exceptions.UniformNotFoundException;
+
 /**
  * User overrides pre and post processing methods in Render mode - 2D (false) 3D
  * (true)
@@ -44,6 +50,12 @@ public abstract class Rendering {
 	}
 	public void render() {
 		calculateProjectionMatrix();
+		
+		//cull faces not in view from the back
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		
+		
 		while (!glfwWindowShouldClose(Window.getWindow())) {
 			clear();
 			try {
@@ -64,9 +76,10 @@ public abstract class Rendering {
 			//for 2D rendering mode force all z-coords to 0
 			if (!fp.getRenderingMode()) {
 				model.z(0);
-				
 			}
-
+			
+			model.rotY(model.getRotY() + 1f);
+			model.z(model.getZ() + 0.1f);
 			
 			// load shader variables and use shader program (also binds)
 			try {
@@ -77,6 +90,8 @@ public abstract class Rendering {
 			glBindVertexArray(model.getVAOID());
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(2);
+
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, model.getTextureID());
 			
@@ -89,6 +104,8 @@ public abstract class Rendering {
 			}
 			glDisableVertexAttribArray(0);
 			glDisableVertexAttribArray(1);
+			glDisableVertexAttribArray(2);
+
 			glBindVertexArray(0);
 		}
 		glUseProgram(0);

@@ -12,12 +12,14 @@ import org.joml.Vector3f;
 
 //TODO
 
+
 //Basic lighting
-//No Texture models (coloured models only)
+//Create float buffer method
 //Controllers for models + cameras
 //Using custom shaders
 //GUIs - Menus, clickables, not sure what else !!!
 //Audio engine
+//sort out timings of threads
 
 
 
@@ -31,6 +33,7 @@ public class App extends Framework{
 		fp.setRenderingMode(true);
 		addModel("stall",ModelType.CUSTOM , "test");
 		selectModel("stall").z(-30f);
+
 		render();
 		close();
 	}
@@ -38,18 +41,18 @@ public class App extends Framework{
 	public static void main(String args[]) {
 		App app = new App();
 	}
-
-	@Override
-	public void postRendering() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void preRendering() {
-		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void postRendering() {
+		
+	}
+
+	
 }
 
 

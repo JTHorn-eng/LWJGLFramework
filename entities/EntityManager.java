@@ -1,8 +1,11 @@
-package app;
+package entities;
 
 import java.util.HashMap;
 
 import org.joml.Vector3f;
+
+import app.ModelType;
+import app.Primitives;
 
 public class EntityManager {
 

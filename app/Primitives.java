@@ -16,6 +16,9 @@ import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 
+import entities.Model;
+import entities.ModelData;
+
 import static org.lwjgl.opengl.GL30.*;
 
 public class Primitives {
@@ -24,6 +27,12 @@ public class Primitives {
 	private static ArrayList<Integer> vboIDs = new ArrayList<>();
 	private static final int BYTES_PER_PIXEL = 4;
 
+	
+	//attribute locations 0 - vertex data
+	//1 - texture data
+	//2 - normal data
+	
+	
 	public static Model loadModel(ModelType type, String textureName) {
 		ModelData data = new ModelData();
 
@@ -34,6 +43,7 @@ public class Primitives {
 
 		// load data into VBOs
 		storeVertexDataInAttributeList(type, data);
+		
 		bindIndicesBuffer(type, data);
 
 		// load texture if specified
@@ -53,22 +63,34 @@ public class Primitives {
 
 	public static void storeVertexDataInAttributeList(ModelType type, ModelData data) {
 		int vboID = glGenBuffers();
+		int nboID = glGenBuffers();
+		
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		if (type.equals(ModelType.CUSTOM)) {
 			data.setVertexData(OBJLoader.getfVertices());
-			
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfVertices()), GL_STATIC_DRAW);
-
 		} else {
 			data.setVertexData(type.getVertexData());
-
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getVertexData()), GL_STATIC_DRAW);
 		}
 		// store vertex data in attribute number 0
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, nboID);
+		if (type.equals(ModelType.CUSTOM)) {
+			data.setNormalData(OBJLoader.getfNormals());
+			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfNormals()), GL_STATIC_DRAW);
+		} else {
+			data.setVertexData(type.getNormalData());
+			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(type.getNormalData()), GL_STATIC_DRAW);
+		}
+		// store vertex data in attribute number 2
+		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
 		vboIDs.add(vboID);
-
+		vboIDs.add(nboID);
 	}
 
 	public static void bindIndicesBuffer(ModelType type, ModelData data) {

@@ -5,10 +5,12 @@ public enum ModelType {
 	SQUARE( new float[] {-0.5f, 0.5f, 0f, -0.5f, -0.5f, 0f, 0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f},
 		    new int[] { 0, 1, 3, 3, 1, 2 },
 	 	    new float[] { 0f, 0f, 0f, 1f, 1f, 1f, 1f, 0f },
+	 	    new float[] {1f, 0f, 0f},
 	 	    true
 	),
 	
 	CUSTOM (null,
+			null,
 			null,
 			null,
 			true
@@ -18,12 +20,14 @@ public enum ModelType {
 	private final int[] indexData;
 	private final float[] textureData;
 	private final boolean renderMode;
+	private final float[] normalData;
 	
-	private ModelType(float[] vertices, int[] indices, float[] textureVertices, boolean renderMode) {
+	private ModelType(float[] vertices, int[] indices, float[] textureVertices, float[] normalVertices, boolean renderMode) {
 		vertexData = vertices;
 		indexData = indices;
 		textureData = textureVertices;
 		this.renderMode = renderMode;	
+		this.normalData = normalVertices;
 	}
 	public boolean getRenderMode() {
 		return renderMode;
@@ -31,13 +35,14 @@ public enum ModelType {
 	public float[] getVertexData() {
 		return vertexData;
 	}
-	
 	public int[] getIndexData() {
 		return indexData;
 	}
-	
 	public float[] getTextureData() {
 		return textureData;
+	}
+	public float[] getNormalData() {
+		return normalData;
 	}
 
 }

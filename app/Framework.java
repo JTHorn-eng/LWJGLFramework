@@ -3,6 +3,9 @@ package app;
 import org.joml.Vector3f;
 import org.lwjgl.Version;
 
+import entities.EntityManager;
+import entities.Model;
+
 /*
  * Default values
  * Rendering mode false - 2D

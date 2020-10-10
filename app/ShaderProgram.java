@@ -3,7 +3,18 @@ package app;
 import java.io.BufferedReader;
 
 import java.io.FileReader;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
+import java.util.Vector;
+
+import org.joml.Vector3f;
+import org.lwjgl.BufferUtils;
+
+import entities.Camera;
+import entities.Light;
+import entities.LightManager;
+import entities.Model;
+import exceptions.UniformNotFoundException;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -86,11 +97,17 @@ public class ShaderProgram {
 	public static void loadAttribLocations() {
 		glBindAttribLocation(programId, 0, "positions");
 		glBindAttribLocation(programId, 1, "textureData");
-
+		glBindAttribLocation(programId, 2, "normals");
 	}
 
 	public static void addUniformVariable(String name) {
 		uniformLocations.put(name, glGetUniformLocation(programId, name));
+	}
+	
+	private static FloatBuffer loadVector3f(Vector3f vector) {
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
+		vector.get(buffer);
+		return buffer;
 	}
 
 	public static void loadUniformVariables(Model model, Camera camera) throws UniformNotFoundException {
@@ -98,16 +115,27 @@ public class ShaderProgram {
 		addUniformVariable("projMatrix");
 		addUniformVariable("transMatrix");
 		addUniformVariable("textureSampler");
-		addUniformVariable("baseColour");
+		addUniformVariable("base");
+
 		addUniformVariable("isTexture");
+		addUniformVariable("lightColour");
+		addUniformVariable("lightPosition");
+
+	
+		glUniform3fv(uniformLocations.get("base"), model.getBase());
+		glUniform3fv(uniformLocations.get("lightColour"), loadVector3f(LightManager.getTest().getColor()));
+		glUniform3fv(uniformLocations.get("lightPosition"), loadVector3f(LightManager.getTest().getPosition()));
 
 
-		glUniform3fv(uniformLocations.get("baseColour"), model.getBaseColour());
 		glUniformMatrix4fv(uniformLocations.get("transMatrix"), false, model.getTransformMatrix());
 		glUniformMatrix4fv(uniformLocations.get("viewMatrix"), false, camera.calculateViewMatrix());
 		glUniformMatrix4fv(uniformLocations.get("projMatrix"), false, Rendering.getProjMatrix());
 		glUniform1i(uniformLocations.get("textureSampler"), 0);
 		glUniform1i(uniformLocations.get("isTexture"), model.isTexture());
+		
+			
+		
+		
 	}
 
 	public void deleteShaderProgram() {

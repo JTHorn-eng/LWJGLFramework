@@ -1,15 +1,21 @@
-package app;
+package entities;
 
 import java.nio.FloatBuffer;
+import java.util.Vector;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryStack;
 
-public class Model {
+import app.ModelType;
 
-	private float r,g,b;
+public class Model {
+	
+	private Vector3f base;
+	private Vector3f ambient;
+	private Vector3f diffuse;
+	private Vector3f specular;
 	private int texture = 1;
 	private int vaoID, textureID;
 	private ModelType type;
@@ -22,10 +28,10 @@ public class Model {
 	public Model(ModelType t, int vaoID, int textureID, ModelData data) {
 	
 		//set base colour
-		r = 255;
-		g = 255;
-		b = 255;
-		
+		ambient = new Vector3f(255, 255, 255);
+		diffuse = new Vector3f(0, 0, 0);
+		specular = new Vector3f(0, 0, 0);
+		base = new Vector3f(255, 0, 0);
 		
 		type = t;
 		this.vaoID = vaoID;
@@ -48,12 +54,38 @@ public class Model {
 		return texture;
 	}
 	
-	public FloatBuffer getBaseColour() {
+	public FloatBuffer getToLight(Light light) {
+		FloatBuffer fb = BufferUtils.createFloatBuffer(3);
+		Vector3f position = new Vector3f(x - light.getPosition().x ,y - light.getPosition().y,z - light.getPosition().z);
+		position.get(fb);
+		return fb;
+		
+	}
+	
+	public FloatBuffer getBase() {
 		FloatBuffer colour = BufferUtils.createFloatBuffer(3);
-		Vector3f color = new Vector3f(r,g,b);
-		color.get(colour);
+		base.get(colour);
 		return colour;
 	}
+	
+	public FloatBuffer getAmbient() {
+		FloatBuffer colour = BufferUtils.createFloatBuffer(3);
+		ambient.get(colour);
+		return colour;
+	}
+	
+	public FloatBuffer getDiffuse() {
+		FloatBuffer colour = BufferUtils.createFloatBuffer(3);
+		diffuse.get(colour);
+		return colour;
+	}
+	
+	public FloatBuffer getSpecular() {
+		FloatBuffer colour = BufferUtils.createFloatBuffer(3);
+		specular.get(colour);
+		return colour;
+	}
+	
 	public FloatBuffer getTransformMatrix() {
 		Matrix4f transform = new Matrix4f();
 
