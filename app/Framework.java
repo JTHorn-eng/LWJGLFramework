@@ -20,7 +20,6 @@ public abstract class Framework extends Rendering {
 		System.out.println("Init framework");
 		System.out.println("Version: " + Version.getVersion());
 		FrameworkProperties fp = FrameworkProperties.genProperties();
-		
 		Window.createWindow();
 
 		// load models and associated shader programs
@@ -32,7 +31,12 @@ public abstract class Framework extends Rendering {
 			e.printStackTrace();
 		}
 		addCamera("default");
+		Controller controller = new Controller();
 
+	}
+	
+	public static void setController(String entityName) {
+		Controller.controller(entityName);
 	}
 
 	public static void addModel(String modelName, ModelType type, String textureName) {

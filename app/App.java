@@ -12,8 +12,7 @@ import org.joml.Vector3f;
 
 //TODO
 
-
-//Basic lighting
+//Add more primitives - lines, shapes, 3d shapes
 //Create float buffer method
 //Controllers for models + cameras
 //Using custom shaders
@@ -28,12 +27,15 @@ public class App extends Framework{
 
 	FrameworkProperties fp = FrameworkProperties.genProperties();
 	
+	
+	
+	
 	public App() {
 		init();
 		fp.setRenderingMode(true);
 		addModel("stall",ModelType.CUSTOM , "test");
-		selectModel("stall").z(-30f);
-
+		selectModel("stall").setZ(-30f);
+		setController("stall");
 		render();
 		close();
 	}

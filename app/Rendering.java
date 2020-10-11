@@ -75,12 +75,10 @@ public abstract class Rendering {
 			
 			//for 2D rendering mode force all z-coords to 0
 			if (!fp.getRenderingMode()) {
-				model.z(0);
+				model.setZ(0);
 			}
-			
-			model.rotY(model.getRotY() + 1f);
-			model.z(model.getZ() + 0.1f);
-			
+			System.out.println(model.x());
+		
 			// load shader variables and use shader program (also binds)
 			try {
 				ShaderProgram.loadUniformVariables(model, EntityManager.getCurrentCamera());

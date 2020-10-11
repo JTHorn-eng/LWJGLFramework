@@ -61,13 +61,13 @@ public class EntityManager {
 			model = Primitives.loadOBJModel(modelName, textureName);
 		}
 
-		model.rotX(rotation.x);
-		model.rotY(rotation.y);
-		model.rotZ(rotation.z);
+		model.setRotX(rotation.x);
+		model.setRotY(rotation.y);
+		model.setRotZ(rotation.z);
 
-		model.x(position.x);
-		model.y(position.y);
-		model.z(position.z);
+		model.setX(position.x);
+		model.setY(position.y);
+		model.setZ(position.z);
 
 		model.setScale(scale);
 		models.put(modelName, model);
