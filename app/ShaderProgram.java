@@ -26,38 +26,41 @@ import static org.lwjgl.opengl.GL20.*;
  *
  */
 public class ShaderProgram {
+	
+	private static HashMap<String, Integer> programIDs = new HashMap<>();
+	
 
-	private static int programId;
+	private static HashMap<String, HashMap <String, Integer>> uniformLocations = new HashMap<>();
 
-	private static HashMap<String, Integer> uniformLocations = new HashMap<>();
-
-	public void createProgram(String vFilename, String fFilename) throws Exception {
+	public void createProgram(String name, String vFilename, String fFilename) throws Exception {
 		// create a new shader program in OpenGL
-		programId = glCreateProgram();
-
-		if (programId == 0) {
+		
+		programIDs.put(name, glCreateProgram());
+		uniformLocations.put(name, new HashMap<String, Integer>());
+		
+		if (programIDs.get(name) == 0) {
 			throw new Exception("Could not create Shader");
 		}
 
-		loadAndCompileShaderProgram(vFilename, GL_VERTEX_SHADER);
-		loadAndCompileShaderProgram(fFilename, GL_FRAGMENT_SHADER);
+		loadAndCompileShaderProgram(name, vFilename, GL_VERTEX_SHADER);
+		loadAndCompileShaderProgram(name, fFilename, GL_FRAGMENT_SHADER);
 
-		glLinkProgram(programId);
-		if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
-			throw new Exception("Error linking shader programs: " + glGetShaderInfoLog(programId, 2048));
+		glLinkProgram(programIDs.get(name));
+		if (glGetProgrami(programIDs.get(name) , GL_LINK_STATUS) == 0) {
+			throw new Exception("Error linking shader programs: " + glGetShaderInfoLog(programIDs.get(name) , 2048));
 
 		}
 
-		glValidateProgram(programId);
+		glValidateProgram(programIDs.get(name) );
 
-		if (glGetProgrami(programId, GL_VALIDATE_STATUS) == 0) {
-			throw new Exception("Error validating shader program: " + glGetShaderInfoLog(programId, 2048));
+		if (glGetProgrami(programIDs.get(name) , GL_VALIDATE_STATUS) == 0) {
+			throw new Exception("Error validating shader program: " + glGetShaderInfoLog(programIDs.get(name) , 2048));
 		}
 
-		loadAttribLocations();
+		loadAttribLocations(name);
 	}
 
-	private void loadAndCompileShaderProgram(String filename, int type) {
+	private void loadAndCompileShaderProgram(String name, String filename, int type) {
 		// load and compile the two shaders
 		int shader = glCreateShader(type);
 
@@ -73,7 +76,7 @@ public class ShaderProgram {
 		if (glGetShaderi(shader, GL_COMPILE_STATUS) == 0) {
 			throw new IllegalStateException("Error compiling shader" + filename);
 		}
-		glAttachShader(programId, shader);
+		glAttachShader(programIDs.get(name) , shader);
 
 	}
 
@@ -94,14 +97,15 @@ public class ShaderProgram {
 		return content;
 	}
 
-	public static void loadAttribLocations() {
-		glBindAttribLocation(programId, 0, "positions");
-		glBindAttribLocation(programId, 1, "textureData");
-		glBindAttribLocation(programId, 2, "normals");
+	public static void loadAttribLocations(String name) {
+		glBindAttribLocation(programIDs.get(name) , 0, "positions");
+		glBindAttribLocation(programIDs.get(name) , 1, "textureData");
+		glBindAttribLocation(programIDs.get(name) , 2, "normals");
 	}
 
-	public static void addUniformVariable(String name) {
-		uniformLocations.put(name, glGetUniformLocation(programId, name));
+	public static void addUniformVariable(String program, String name) {
+
+		uniformLocations.get(program).put(name, glGetUniformLocation(programIDs.get(program) , name));
 	}
 	
 	private static FloatBuffer loadVector3f(Vector3f vector) {
@@ -110,43 +114,39 @@ public class ShaderProgram {
 		return buffer;
 	}
 
-	public static void loadUniformVariables(Model model, Camera camera) throws UniformNotFoundException {
-		addUniformVariable("viewMatrix");
-		addUniformVariable("projMatrix");
-		addUniformVariable("transMatrix");
-		addUniformVariable("textureSampler");
-		addUniformVariable("base");
+	public static void loadDefaultUniformVariables(Model model, Camera camera) throws UniformNotFoundException {
+		addUniformVariable("default", "viewMatrix");
+		addUniformVariable("default","projMatrix");
+		addUniformVariable("default","transMatrix");
+		addUniformVariable("default","textureSampler");
+		addUniformVariable("default","base");
 
-		addUniformVariable("isTexture");
-		addUniformVariable("lightColour");
-		addUniformVariable("lightPosition");
+		addUniformVariable("default","isTexture");
+		addUniformVariable("default","lightColour");
+		addUniformVariable("default","lightPosition");
 
 	
-		glUniform3fv(uniformLocations.get("base"), model.getBase());
-		glUniform3fv(uniformLocations.get("lightColour"), loadVector3f(LightManager.getTest().getColor()));
-		glUniform3fv(uniformLocations.get("lightPosition"), loadVector3f(LightManager.getTest().getPosition()));
+		glUniform3fv(uniformLocations.get("default").get("base"), model.getBase());
+		glUniform3fv(uniformLocations.get("default").get("lightColour"), loadVector3f(LightManager.getTest().getColor()));
+		glUniform3fv(uniformLocations.get("default").get("lightPosition"), loadVector3f(LightManager.getTest().getPosition()));
 
 
-		glUniformMatrix4fv(uniformLocations.get("transMatrix"), false, model.getTransformMatrix());
-		glUniformMatrix4fv(uniformLocations.get("viewMatrix"), false, camera.calculateViewMatrix());
-		glUniformMatrix4fv(uniformLocations.get("projMatrix"), false, Rendering.getProjMatrix());
-		glUniform1i(uniformLocations.get("textureSampler"), 0);
-		glUniform1i(uniformLocations.get("isTexture"), model.isTexture());
-		
-			
-		
-		
+		glUniformMatrix4fv(uniformLocations.get("default").get("transMatrix"), false, model.getTransformMatrix());
+		glUniformMatrix4fv(uniformLocations.get("default").get("viewMatrix"), false, camera.calculateViewMatrix());
+		glUniformMatrix4fv(uniformLocations.get("default").get("projMatrix"), false, Rendering.getProjMatrix());
+		glUniform1i(uniformLocations.get("default").get("textureSampler"), 0);
+		glUniform1i(uniformLocations.get("default").get("isTexture"), model.isTexture());
 	}
 
-	public void deleteShaderProgram() {
+	public void deleteShaderProgram(String name) {
 		glUseProgram(0);
-		if (programId != 0) {
-			glDeleteProgram(programId);
+		if (programIDs.get(name)  != 0) {
+			glDeleteProgram(programIDs.get(name) );
 		}
 	}
 
-	public static int getProgram() {
-		return programId;
+	public static int getProgram(String name) {
+		return programIDs.get(name) ;
 	}
 
 }

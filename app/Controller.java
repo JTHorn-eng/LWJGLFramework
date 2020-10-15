@@ -21,8 +21,8 @@ public class Controller {
 	private static final String[] MODE = {"FREE_VIEW", "STATIC", "FOLLOW"};
 	private static String selectedEntityID = "";
 	private static final float ROTATION_CONSTANT = 0.1f;
-	private static final float MOVEMENT_X = 0.01f;
-	private static final float MOVEMENT_Z = 0.01f;
+	private static final float MOVEMENT_X = 0.1f;
+	private static final float MOVEMENT_Z = 0.1f;
 
 	private float mouseX, mouseY;
 
@@ -77,20 +77,16 @@ public class Controller {
 				Model model = EntityManager.getModel(selectedEntityID);
 				switch(key) {
 					case GLFW.GLFW_KEY_W:
-						model.setX(model.x() + MOVEMENT_X);
+						model.setZ(model.z() + MOVEMENT_Z);
 						break;
 					case GLFW.GLFW_KEY_A:
-						model.setY(model.z() - MOVEMENT_Z);
+						model.setX(model.x() - MOVEMENT_X);
 						break;
 					case GLFW.GLFW_KEY_D:
-						model.setY(model.z() + MOVEMENT_Z);
+						model.setX(model.x() + MOVEMENT_X);
 						break;
 					case GLFW.GLFW_KEY_S:
-						model.setX(model.x() - MOVEMENT_X);
-				model.setRotX(mouseX * ROTATION_CONSTANT);
-				model.setRotY(mouseY * ROTATION_CONSTANT);
-
-				
+						model.setZ(model.z() - MOVEMENT_Z);
 				}
 			}
 			else if (type.equals("camera")) {

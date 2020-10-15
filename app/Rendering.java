@@ -59,6 +59,7 @@ public abstract class Rendering {
 		while (!glfwWindowShouldClose(Window.getWindow())) {
 			clear();
 			try {
+				renderLines();
 				renderModels();
 			} catch (NoCameraException e) {
 				System.err.println(e);
@@ -68,20 +69,31 @@ public abstract class Rendering {
 		}
 	}
 
+	private void renderLines() {
+		glUseProgram(ShaderProgram.getProgram("lines"));
+		glBindVertexArray(Primitives.getLineVAOID());
+		glEnableVertexAttribArray(0);
+		//System.out.println(EntityManager.getLines().values().size());
+		glDrawArrays(GL_LINES, 0, EntityManager.getLines().values().size() * 6);
+		glDisableVertexAttribArray(0);
+		glBindVertexArray(0);
+		glUseProgram(0);
+		
+	}
+	
 	private void renderModels() throws NoCameraException {
 		preRendering();
-		glUseProgram(ShaderProgram.getProgram());
+		glUseProgram(ShaderProgram.getProgram("default"));
 		for (Model model : EntityManager.getModels().values()) {
 			
 			//for 2D rendering mode force all z-coords to 0
 			if (!fp.getRenderingMode()) {
 				model.setZ(0);
 			}
-			System.out.println(model.x());
 		
 			// load shader variables and use shader program (also binds)
 			try {
-				ShaderProgram.loadUniformVariables(model, EntityManager.getCurrentCamera());
+				ShaderProgram.loadDefaultUniformVariables(model, EntityManager.getCurrentCamera());
 			} catch (UniformNotFoundException e) {
 				System.out.println(e.getLocalizedMessage());
 			}
@@ -95,7 +107,7 @@ public abstract class Rendering {
 			
 			//true for indexed rendering
 			if (indexed) {
-					glDrawElements(GL_TRIANGLES,model.getData().getIndexData().length , GL_UNSIGNED_INT, 0);			
+				glDrawElements(GL_TRIANGLES,model.getData().getIndexData().length , GL_UNSIGNED_INT, 0);			
 			} else {
 				glDrawArrays(GL_TRIANGLES, 0, model.getData().getVertexData().length);
 				

@@ -26,7 +26,9 @@ public abstract class Framework extends Rendering {
 		// load shaders first !
 		ShaderProgram sp = new ShaderProgram();
 		try {
-			sp.createProgram("shaders/Test_Vertex_Shader.txt", "shaders/Test_Fragment_Shader.txt");
+			sp.createProgram("default", "shaders/Test_Vertex_Shader.txt", "shaders/Test_Fragment_Shader.txt");
+			sp.createProgram("lines", "shaders/Line_Vertex_Shader.txt", "shaders/Line_Fragment_Shader.txt");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -48,6 +50,10 @@ public abstract class Framework extends Rendering {
 		EntityManager.addModel(modelName, type, textureName, position, rotation, scale);
 
 	}
+	public static void addLine(String name, Vector3f start, Vector3f end, float thickness) {
+		EntityManager.addLine(name, start, end, thickness);
+	}
+
 	public static void addCamera(String name) {
 		EntityManager.addCamera(name);
 	}

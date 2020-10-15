@@ -16,6 +16,8 @@ import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL15;
 
+import entities.EntityManager;
+import entities.Line;
 import entities.Model;
 import entities.ModelData;
 
@@ -25,6 +27,8 @@ public class Primitives {
 
 	private static ArrayList<Integer> vaoIDs = new ArrayList<>();
 	private static ArrayList<Integer> vboIDs = new ArrayList<>();
+	private static int lineVAOID, lineVBOID;
+	
 	private static final int BYTES_PER_PIXEL = 4;
 
 	
@@ -32,6 +36,46 @@ public class Primitives {
 	//1 - texture data
 	//2 - normal data
 	
+	public static int getLineVAOID() {
+		return lineVAOID;
+	}
+	
+	public static void loadLines() {
+		lineVAOID = glGenVertexArrays();
+		lineVBOID = glGenBuffers();
+		glBindVertexArray(lineVAOID);
+		
+		
+
+		glBindBuffer(GL_ARRAY_BUFFER, lineVBOID);
+		int size = EntityManager.getLines().values().size();
+		
+		float[] fVertices = new float[size * 6];
+		ArrayList<Float> vertices = new ArrayList<>();
+		for (Line line : EntityManager.getLines().values()) {
+			vertices.add(line.getStart().x);
+			vertices.add(line.getStart().y);
+			vertices.add(line.getStart().z);
+			vertices.add(line.getEnd().x);
+			vertices.add(line.getEnd().y);
+			vertices.add(line.getEnd().z);
+
+		}
+		for (int x = 0; x < size * 6; x++) {
+			fVertices[x] = vertices.get(x);	
+		}
+		glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(fVertices), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+		
+		
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+		glBindVertexArray(0);
+		vboIDs.add(lineVBOID);
+		vaoIDs.add(lineVAOID);
+		
+	}
 	
 	public static Model loadModel(ModelType type, String textureName) {
 		ModelData data = new ModelData();

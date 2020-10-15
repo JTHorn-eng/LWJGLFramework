@@ -8,10 +8,12 @@ import app.ModelType;
 import app.Primitives;
 
 public class EntityManager {
-
+	
+	private static HashMap<String, Line> lines = new HashMap<>();
 	private static HashMap<String, Model> models = new HashMap<>();
 	private static HashMap<String, Camera> cameras = new HashMap<>();
 	private static String currentCamera = "default";
+	private static int lineID = 0;
 	/**
 	 * 
 	 * @param modelName   - name of the model, use OBJ filename is using custom
@@ -34,6 +36,15 @@ public class EntityManager {
 
 	public static void addCamera(String name) {
 		cameras.put(name, new Camera());
+	}
+	public static HashMap<String, Line> getLines() {
+		return EntityManager.lines;
+	}
+	
+	public static void addLine(String name, Vector3f start, Vector3f end, float thickness) {
+		lines.put(name, new Line(start, end, thickness, lineID));
+		Primitives.loadLines();
+		lineID++;
 	}
 
 	public static void addModel(String modelName, ModelType type, String textureName) {
