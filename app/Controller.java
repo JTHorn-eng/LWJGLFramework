@@ -23,6 +23,7 @@ public class Controller {
 	private static final float ROTATION_CONSTANT = 0.1f;
 	private static final float MOVEMENT_X = 0.1f;
 	private static final float MOVEMENT_Z = 0.1f;
+	private static final float ACTION = GLFW.GLFW_REPEAT;
 
 	private float mouseX, mouseY;
 
@@ -30,18 +31,18 @@ public class Controller {
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		GLFW.glfwSetKeyCallback(Window.getWindow(), (window, key, scancode, action, mods) -> {
 			
-			if (key == GLFW.GLFW_KEY_W && action == GLFW.GLFW_PRESS) {
+			if (key == GLFW.GLFW_KEY_W && action == ACTION) {
 				movement(GLFW.GLFW_KEY_W);
 			}
-			if (key == GLFW.GLFW_KEY_A && action == GLFW.GLFW_PRESS) {
+			if (key == GLFW.GLFW_KEY_A && action == ACTION) {
 				movement(GLFW.GLFW_KEY_A);
 
 			}
-			if (key == GLFW.GLFW_KEY_S && action == GLFW.GLFW_PRESS) {
+			if (key == GLFW.GLFW_KEY_S && action == ACTION) {
 				movement(GLFW.GLFW_KEY_S);
 
 			}
-			if (key == GLFW.GLFW_KEY_D && action == GLFW.GLFW_PRESS) {
+			if (key == GLFW.GLFW_KEY_D && action == ACTION) {
 				movement(GLFW.GLFW_KEY_D);
 
 			}	

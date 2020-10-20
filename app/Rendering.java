@@ -38,7 +38,7 @@ public abstract class Rendering {
 	private static boolean indexed = true;
 	private static FrameworkProperties fp = FrameworkProperties.genProperties();
 	
-	private void clear() {
+	private static  void clear() {
 
 		// LWJGL detects the context in the current thread
 		// creates the GLCapabilities instance and makes the OpenGL
@@ -48,28 +48,26 @@ public abstract class Rendering {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-	public void render() {
-		calculateProjectionMatrix();
+	public static void render() {
 		
 		//cull faces not in view from the back
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		
 		
-		while (!glfwWindowShouldClose(Window.getWindow())) {
-			clear();
-			try {
-				renderLines();
-				renderModels();
-			} catch (NoCameraException e) {
-				System.err.println(e);
-			}
-			glfwSwapBuffers(Window.getWindow());
-			glfwPollEvents();
+		clear();
+		try {
+//				renderLines();
+			renderModels();
+		} catch (NoCameraException e) {
+			System.err.println(e);
 		}
+		glfwSwapBuffers(Window.getWindow());
+		glfwPollEvents();
+		
 	}
 
-	private void renderLines() {
+	private static void renderLines() {
 		glUseProgram(ShaderProgram.getProgram("lines"));
 		glBindVertexArray(Primitives.getLineVAOID());
 		glEnableVertexAttribArray(0);
@@ -81,22 +79,15 @@ public abstract class Rendering {
 		
 	}
 	
-	private void renderModels() throws NoCameraException {
-		preRendering();
+	private static void renderModels() throws NoCameraException {
 		glUseProgram(ShaderProgram.getProgram("default"));
 		for (Model model : EntityManager.getModels().values()) {
-			
-			//for 2D rendering mode force all z-coords to 0
-			if (!fp.getRenderingMode()) {
-				model.setZ(0);
-			}
-		
-			// load shader variables and use shader program (also binds)
 			try {
 				ShaderProgram.loadDefaultUniformVariables(model, EntityManager.getCurrentCamera());
 			} catch (UniformNotFoundException e) {
 				System.out.println(e.getLocalizedMessage());
 			}
+
 			glBindVertexArray(model.getVAOID());
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
@@ -119,7 +110,7 @@ public abstract class Rendering {
 			glBindVertexArray(0);
 		}
 		glUseProgram(0);
-		postRendering();
+		
 
 	}
 	
@@ -139,9 +130,16 @@ public abstract class Rendering {
 		projMatrix = projectionMatrixBuffer;
 	}
 	
+	public static void updateProjectionMatrix() {
+		Rendering.calculateProjectionMatrix();
+	}
 	
 	public static FloatBuffer getProjMatrix() {
 		return projMatrix;
+	}
+	
+	public static void close() {
+		glUseProgram(0);
 	}
 	
 }

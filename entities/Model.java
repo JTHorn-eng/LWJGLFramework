@@ -16,7 +16,7 @@ public class Model extends Entity {
 	private Vector3f ambient;
 	private Vector3f diffuse;
 	private Vector3f specular;
-	private int texture = 1;
+	private int texture = 0;
 	private int vaoID, textureID;
 	private ModelType type;
 	private FloatBuffer transformBuffer = BufferUtils.createFloatBuffer(16);

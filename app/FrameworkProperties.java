@@ -54,6 +54,7 @@ public class FrameworkProperties {
 
 	public void setRenderingMode(boolean renderingMode) {
 		this.renderingMode = renderingMode;
+		Rendering.updateProjectionMatrix();
 	}
 	public boolean getRenderingMode() {
 		return renderingMode;

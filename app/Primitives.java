@@ -95,7 +95,7 @@ public class Primitives {
 			try {
 				textureID = loadTexture(type, textureName, data);
 			} catch (IOException e) {
-				System.err.print(e.getLocalizedMessage());
+				System.err.print("Unable to load texture: " + e.getLocalizedMessage());
 			}
 		}
 

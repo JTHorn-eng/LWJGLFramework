@@ -11,10 +11,8 @@ import org.joml.Vector3f;
 //render them
 //once finished close the framework
 
-
 //TODO
 
-//Add more primitives - lines, shapes, 3d shapes
 //Create float buffer method
 //Using custom shaders
 //GUIs - Menus, clickables, not sure what else !!!
@@ -22,26 +20,28 @@ import org.joml.Vector3f;
 //sort out timings of threads
 //animations
 //particle effects
+//fix lighting bug(possibly models not forming properly - OBJLoader)
+//Option to load models and change vertex data, index data etc... for custom models made in the framework
 
+
+//Lines have to be on the same plane !!!
 
 public class App extends Framework{
 
 	FrameworkProperties fp = FrameworkProperties.genProperties();
-	
-	
-	
-	
+
 	public App() {
 		init();
 		fp.setRenderingMode(true);
-		addModel("stall",ModelType.CUSTOM , "test");
-		addLine("line1", new Vector3f(0, 0, 0), new Vector3f(1,1,-1f), 1.0f);
-		selectModel("stall").setZ(-30f);
+		addModel("stall", ModelType.CUSTOM , "test");
+		
+		//addLineSeg("line1", new Vector3f(-10f, -10f, -1.1f), new Vector3f(10,10,-1f), 1.0f);
+		
+		selectModel("stall").setZ(-10f);
 		setController("stall");
-		render();
-		close();
+		loop();
 	}
-	
+		
 	public static void main(String args[]) {
 		App app = new App();
 	}

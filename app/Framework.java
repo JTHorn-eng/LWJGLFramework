@@ -14,7 +14,10 @@ import entities.Model;
  * Window title = "Application"
  */
 public abstract class Framework extends Rendering {
-
+	
+	private static GameLoop gameLoop = GameLoop.init();
+	
+	
 	public void init() {
 
 		System.out.println("Init framework");
@@ -34,7 +37,9 @@ public abstract class Framework extends Rendering {
 		}
 		addCamera("default");
 		Controller controller = new Controller();
-
+		
+		
+		
 	}
 	
 	public static void setController(String entityName) {
@@ -50,7 +55,7 @@ public abstract class Framework extends Rendering {
 		EntityManager.addModel(modelName, type, textureName, position, rotation, scale);
 
 	}
-	public static void addLine(String name, Vector3f start, Vector3f end, float thickness) {
+	public static void addLineSeg(String name, Vector3f start, Vector3f end, float thickness) {
 		EntityManager.addLine(name, start, end, thickness);
 	}
 
@@ -61,11 +66,12 @@ public abstract class Framework extends Rendering {
 	public static Model selectModel(String modelName) {
 		return EntityManager.getModel(modelName);
 	}
-
-
-	public static void close() {
-		Primitives.cleanUp();
-		Window.destroyWindow();
+	
+	//start updating and rendering, call this after everything !!!
+	public static void loop() {
+		gameLoop.loop();
 	}
+	
+	
 
 }

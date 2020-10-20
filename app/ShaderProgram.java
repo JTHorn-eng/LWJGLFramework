@@ -138,10 +138,12 @@ public class ShaderProgram {
 		glUniform1i(uniformLocations.get("default").get("isTexture"), model.isTexture());
 	}
 
-	public void deleteShaderProgram(String name) {
+	public static void deleteShaderPrograms() {
 		glUseProgram(0);
-		if (programIDs.get(name)  != 0) {
-			glDeleteProgram(programIDs.get(name) );
+		for (String name : programIDs.keySet()) {
+			if (programIDs.get(name) != 0) {
+				glDeleteProgram(programIDs.get(name) );
+			}
 		}
 	}
 
