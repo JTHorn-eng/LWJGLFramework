@@ -16,7 +16,7 @@ import exceptions.UniformNotFoundException;
 public class GameLoop {
 
 	private static final double MS_PER_UPDATE = 1000;
-	private static FrameworkProperties fp = FrameworkProperties.genProperties();
+	private static FrameworkProperties fp = FrameworkProperties.getProperties();
 	private static GameLoop gameLoop = null;
 	
 	public static GameLoop init() {

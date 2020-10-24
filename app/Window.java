@@ -1,6 +1,4 @@
 package app;
-import org.lwjgl.*;
-
 
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -16,7 +14,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Window {
 
 	private static long window = 0;
-	private static FrameworkProperties fp = FrameworkProperties.genProperties();
+	private static FrameworkProperties fp = FrameworkProperties.getProperties();
 	private static GLFWWindowSizeCallback sizeCallback;
 	
 	public static void createWindow() {
@@ -60,7 +58,6 @@ public class Window {
 			
 		};
 
-		
 		// Get the thread stack and push a new frame
 		try ( MemoryStack stack = stackPush() ) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*

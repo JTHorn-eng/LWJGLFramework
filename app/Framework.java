@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 import org.lwjgl.Version;
 
 import entities.EntityManager;
+import entities.LightManager;
 import entities.Model;
 
 /*
@@ -16,13 +17,14 @@ import entities.Model;
 public abstract class Framework extends Rendering {
 	
 	private static GameLoop gameLoop = GameLoop.init();
-	
+	protected static final boolean RENDER_2D = false;
+	protected static final boolean RENDER_3D = true;
 	
 	public void init() {
 
 		System.out.println("Init framework");
 		System.out.println("Version: " + Version.getVersion());
-		FrameworkProperties fp = FrameworkProperties.genProperties();
+		FrameworkProperties fp = FrameworkProperties.getProperties();
 		Window.createWindow();
 
 		// load models and associated shader programs
@@ -40,6 +42,10 @@ public abstract class Framework extends Rendering {
 		
 		
 		
+	}
+	
+	public static void addLight(String name) {
+		LightManager.addLight(name);
 	}
 	
 	public static void setController(String entityName) {

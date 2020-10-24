@@ -8,13 +8,14 @@ public class FrameworkProperties {
 	private int width = 1280;
 	private int height = 720;
 	private boolean renderingMode = false;
+
 	private FrameworkProperties() {
 		
 	}
 	
 	
 
-	public static FrameworkProperties genProperties() {
+	public static FrameworkProperties getProperties() {
 		if (properties == null) {
 			properties = new FrameworkProperties();
 			

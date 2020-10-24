@@ -36,7 +36,7 @@ public abstract class Rendering {
 	private static FloatBuffer projMatrix = null;
 	private static FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
 	private static boolean indexed = true;
-	private static FrameworkProperties fp = FrameworkProperties.genProperties();
+	private static FrameworkProperties fp = FrameworkProperties.getProperties();
 	
 	private static  void clear() {
 

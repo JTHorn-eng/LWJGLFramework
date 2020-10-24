@@ -46,6 +46,17 @@ public class EntityManager {
 		Primitives.loadLines();
 		lineID++;
 	}
+	
+	//no texture
+	public static void addModel(String modelName, ModelType type) {
+		if (!type.equals(ModelType.CUSTOM)) {
+			Model model = Primitives.loadModel(type, "");
+			models.put(modelName, model);
+		} else {
+			Model model = Primitives.loadOBJModel(modelName, "");
+			models.put(modelName, model);
+		}
+	}
 
 	public static void addModel(String modelName, ModelType type, String textureName) {
 

@@ -28,15 +28,15 @@ import org.joml.Vector3f;
 
 public class App extends Framework{
 
-	FrameworkProperties fp = FrameworkProperties.genProperties();
+	FrameworkProperties fp = FrameworkProperties.getProperties();
 
 	public App() {
 		init();
-		fp.setRenderingMode(true);
+		fp.setRenderingMode(RENDER_3D);
 		addModel("stall", ModelType.CUSTOM , "test");
 		
 		//addLineSeg("line1", new Vector3f(-10f, -10f, -1.1f), new Vector3f(10,10,-1f), 1.0f);
-		
+		addLight("asd");
 		selectModel("stall").setZ(-10f);
 		setController("stall");
 		loop();
