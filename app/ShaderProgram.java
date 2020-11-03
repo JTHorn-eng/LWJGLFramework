@@ -137,6 +137,13 @@ public class ShaderProgram {
 		glUniform1i(uniformLocations.get("default").get("isTexture"), model.getTexture());
 	
 		glUniform1f(uniformLocations.get("default").get("scalarBrightness"), light.getBrightness());
+		
+		
+	}
+	
+	public static void loadGUIUniforms() throws UniformNotFoundException {
+		addUniformVariable("guis", "textureSampler");
+		glUniform1i(uniformLocations.get("guis").get("textureSampler"), 0);
 	}
 
 	public static void deleteShaderPrograms() {

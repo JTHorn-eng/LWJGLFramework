@@ -6,6 +6,7 @@ import org.lwjgl.Version;
 import entities.EntityManager;
 import entities.LightManager;
 import entities.Model;
+import gui.GUIRenderer;
 
 /*
  * Default values
@@ -31,18 +32,22 @@ public abstract class Framework extends Rendering {
 		// load shaders first !
 		ShaderProgram sp = new ShaderProgram();
 		try {
-			sp.createProgram("default", "shaders/Test_Vertex_Shader.txt", "shaders/Test_Fragment_Shader.txt");
+			sp.createProgram("default", "shaders/Default_Vertex_Shader.txt", "shaders/Default_Fragment_Shader.txt");
 			sp.createProgram("lines", "shaders/Line_Vertex_Shader.txt", "shaders/Line_Fragment_Shader.txt");
+			sp.createProgram("guis", "shaders/GUI_Vertex_Shader.txt", "shaders/GUI_Fragment_Shader.txt");
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		addCamera("default");
 		Controller controller = new Controller();
-		
-		
-		
+			
 	}
+	
+	public static void addText(String text) {
+		GUIRenderer.addText(text);
+	}
+	
 	
 	public static void addLight(String name) {
 		LightManager.addLight(name);

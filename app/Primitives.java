@@ -1,6 +1,7 @@
 package app;
 
 import java.awt.image.BufferedImage;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -93,7 +95,7 @@ public class Primitives {
 		return new Model(type, vaoID, textureID, textureMode, data);
 	}
 
-	public static void storeVertexDataInAttributeList(ModelType type, ModelData data) {
+	static void storeVertexDataInAttributeList(ModelType type, ModelData data) {
 		int vboID = glGenBuffers();
 		int nboID = glGenBuffers();
 
@@ -125,7 +127,7 @@ public class Primitives {
 		vboIDs.add(nboID);
 	}
 
-	public static void bindIndicesBuffer(ModelType type, ModelData data) {
+    static void bindIndicesBuffer(ModelType type, ModelData data) {
 		int vboID = glGenBuffers();
 		vboIDs.add(vboID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
@@ -141,7 +143,7 @@ public class Primitives {
 		// NEVER UNBIND THE INDEX BUFFER !!!
 	}
 
-	public static int loadTexture(ModelType type, String fileName, int mode, ModelData data) {
+	static int loadTexture(ModelType type, String fileName, int mode, ModelData data) {
 		// load image data
 		BufferedImage imageBuffer = null;
 		try {
@@ -217,20 +219,29 @@ public class Primitives {
 
 	}
 
-	private static FloatBuffer loadVBOFloats(float[] data) {
+	static FloatBuffer loadVBOFloats(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
 
-	private static IntBuffer loadIBOInts(int[] data) {
+	static IntBuffer loadIBOInts(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
-
+	
+	public static List<Integer> getVAOIDs() {
+		return Primitives.vaoIDs;
+	}
+	
+	public static List<Integer> getVBOIDs() {
+		return Primitives.vboIDs;
+	}
+	
+	
 	// delete all VAOs and VBOs currently in memory
 	public static void cleanUp() {
 		for (int x : vaoIDs) {

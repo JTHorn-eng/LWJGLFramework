@@ -17,6 +17,7 @@ import entities.LightManager;
 import entities.Model;
 import exceptions.NoCameraException;
 import exceptions.UniformNotFoundException;
+import gui.GUIRenderer;
 
 /**
  * User overrides pre and post processing methods in Render mode - 2D (false) 3D
@@ -53,18 +54,17 @@ public abstract class Rendering {
 		//cull faces not in view from the back
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		
-		
-		clear();
+	
 		try {
 //				renderLines();
 			renderModels();
 		} catch (NoCameraException e) {
 			System.err.println(e);
 		}
+		GUIRenderer.render();
 		glfwSwapBuffers(Window.getWindow());
 		glfwPollEvents();
-		
+		clear();
 	}
 
 	private static void renderLines() {
