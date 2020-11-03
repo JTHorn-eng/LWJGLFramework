@@ -28,28 +28,21 @@ public class Primitives {
 	private static ArrayList<Integer> vaoIDs = new ArrayList<>();
 	private static ArrayList<Integer> vboIDs = new ArrayList<>();
 	private static int lineVAOID, lineVBOID;
-	
+
 	private static final int BYTES_PER_PIXEL = 4;
 
-	
-	//attribute locations 0 - vertex data
-	//1 - texture data
-	//2 - normal data
-	
 	public static int getLineVAOID() {
 		return lineVAOID;
 	}
-	
+
 	public static void loadLines() {
 		lineVAOID = glGenVertexArrays();
 		lineVBOID = glGenBuffers();
 		glBindVertexArray(lineVAOID);
-		
-		
 
 		glBindBuffer(GL_ARRAY_BUFFER, lineVBOID);
 		int size = EntityManager.getLines().values().size();
-		
+
 		float[] fVertices = new float[size * 6];
 		ArrayList<Float> vertices = new ArrayList<>();
 		for (Line line : EntityManager.getLines().values()) {
@@ -62,53 +55,48 @@ public class Primitives {
 
 		}
 		for (int x = 0; x < size * 6; x++) {
-			fVertices[x] = vertices.get(x);	
+			fVertices[x] = vertices.get(x);
 		}
 		glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(fVertices), GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
-		
-		
+
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
+
 		glBindVertexArray(0);
 		vboIDs.add(lineVBOID);
 		vaoIDs.add(lineVAOID);
-		
+
 	}
-	
+
 	public static Model loadModel(ModelType type, String textureName) {
 		ModelData data = new ModelData();
 
 		// load VAO
 		int vaoID = glGenVertexArrays();
 		int textureID = 0;
+		int textureMode = 0;
 		glBindVertexArray(vaoID);
 
 		// load data into VBOs
 		storeVertexDataInAttributeList(type, data);
-		
+
 		bindIndicesBuffer(type, data);
-
+		
 		// load texture if specified
-		if (!(textureName.equals(""))) {
-			try {
-				textureID = loadTexture(type, textureName, data);
-			} catch (IOException e) {
-				System.err.print("Unable to load texture: " + e.getLocalizedMessage());
-			}
-		}
-
+		if ((textureName.equals("")))  textureMode = 1;
+		
+		textureID = loadTexture(type, textureName, textureMode, data);
 		// Unbind VAO after using it
 		glBindVertexArray(0);
 		vaoIDs.add(vaoID);
-		return new Model(type, vaoID, textureID, data);
+		return new Model(type, vaoID, textureID, textureMode, data);
 	}
 
 	public static void storeVertexDataInAttributeList(ModelType type, ModelData data) {
 		int vboID = glGenBuffers();
 		int nboID = glGenBuffers();
-		
+
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
 		if (type.equals(ModelType.CUSTOM)) {
 			data.setVertexData(OBJLoader.getfVertices());
@@ -120,7 +108,7 @@ public class Primitives {
 		// store vertex data in attribute number 0
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
+
 		glBindBuffer(GL_ARRAY_BUFFER, nboID);
 		if (type.equals(ModelType.CUSTOM)) {
 			data.setNormalData(OBJLoader.getfNormals());
@@ -132,7 +120,7 @@ public class Primitives {
 		// store vertex data in attribute number 2
 		glVertexAttribPointer(2, 3, GL_FLOAT, false, 0, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		
+
 		vboIDs.add(vboID);
 		vboIDs.add(nboID);
 	}
@@ -148,18 +136,24 @@ public class Primitives {
 		} else {
 			data.setIndexData(type.getIndexData());
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadIBOInts(type.getIndexData()), GL_STATIC_DRAW);
-		
 
 		}
 		// NEVER UNBIND THE INDEX BUFFER !!!
 	}
 
-	public static int loadTexture(ModelType type, String fileName, ModelData data) throws IOException {
-
+	public static int loadTexture(ModelType type, String fileName, int mode, ModelData data) {
 		// load image data
-		BufferedImage imageBuffer = ImageIO.read(new File("images/" + fileName + ".png"));
+		BufferedImage imageBuffer = null;
+		try {
+			imageBuffer = ImageIO.read(new File("images/" + fileName + ".png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(imageBuffer);
 		int[] pixels = new int[imageBuffer.getWidth() * imageBuffer.getHeight()];
-		imageBuffer.getRGB(0, 0, imageBuffer.getWidth(), imageBuffer.getHeight(), pixels, 0, imageBuffer.getWidth());
+		imageBuffer.getRGB(0, 0, imageBuffer.getWidth(), imageBuffer.getHeight(), pixels, 0,
+				imageBuffer.getWidth());
 
 		ByteBuffer buffer = BufferUtils
 				.createByteBuffer(imageBuffer.getWidth() * imageBuffer.getHeight() * BYTES_PER_PIXEL);
@@ -176,15 +170,18 @@ public class Primitives {
 		}
 
 		buffer.flip();
-
+		
+	
+		
+		
 		// load texture objects and setup parameters
 		int textureID = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, textureID);
-		// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+		
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageBuffer.getWidth(), imageBuffer.getHeight(), 0, GL_RGBA,
 				GL_UNSIGNED_BYTE, buffer);
-
+		
+		// glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glGenerateMipmap(GL_TEXTURE_2D); // generate low-res textures for textured object scaling
 
 		// setup texture parameters, interpolate image data where pixel data
@@ -199,11 +196,10 @@ public class Primitives {
 		// load texture data
 		int vboID = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-
 		if (type.equals(ModelType.CUSTOM)) {
 			data.setTextureData(OBJLoader.getfTextureCoords());
 			glBufferData(GL_ARRAY_BUFFER, loadVBOFloats(OBJLoader.getfTextureCoords()), GL_STATIC_DRAW);
-			
+
 		} else {
 			data.setTextureData(type.getTextureData());
 
@@ -211,7 +207,6 @@ public class Primitives {
 
 		}
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
-
 		return textureID;
 
 	}
@@ -221,10 +216,6 @@ public class Primitives {
 		return loadModel(ModelType.CUSTOM, textureFilename);
 
 	}
-
-	// private static boolean isPowerOf2(int num) {
-	// return ((num & (num - 1)) == 1) && (num > 1);
-	// }
 
 	private static FloatBuffer loadVBOFloats(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);

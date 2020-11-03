@@ -6,10 +6,11 @@ public class Light {
 
 	private Vector3f position;
 	private Vector3f color;
+	float brightness = 0.5f;
 	
 	public Light() {
 		position = new Vector3f(0, 0, 0);
-		color = new Vector3f(255, 255, 255);
+		color = new Vector3f(0, 255, 255);
 	}
 	
 	public Vector3f getPosition() {
@@ -28,5 +29,11 @@ public class Light {
 		this.color = color;
 	}
 	
+	public float getBrightness() {
+		return this.brightness;
+	}
 	
+	public void setBrightness(float b) {
+		this.brightness = b;
+	}
 }

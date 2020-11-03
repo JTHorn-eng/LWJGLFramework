@@ -83,7 +83,7 @@ public abstract class Rendering {
 		glUseProgram(ShaderProgram.getProgram("default"));
 		for (Model model : EntityManager.getModels().values()) {
 			try {
-				ShaderProgram.loadDefaultUniformVariables(model, EntityManager.getCurrentCamera());
+				ShaderProgram.loadDefaultUniformVariables(model, EntityManager.getCurrentCamera(), LightManager.getTest());
 			} catch (UniformNotFoundException e) {
 				System.out.println(e.getLocalizedMessage());
 			}

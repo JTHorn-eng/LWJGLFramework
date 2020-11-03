@@ -16,7 +16,7 @@ import entities.Model;
  */
 public abstract class Framework extends Rendering {
 	
-	private static GameLoop gameLoop = GameLoop.init();
+	private static Loop loop = Loop.init();
 	protected static final boolean RENDER_2D = false;
 	protected static final boolean RENDER_3D = true;
 	
@@ -75,7 +75,7 @@ public abstract class Framework extends Rendering {
 	
 	//start updating and rendering, call this after everything !!!
 	public static void loop() {
-		gameLoop.loop();
+		loop.loop();
 	}
 	
 	

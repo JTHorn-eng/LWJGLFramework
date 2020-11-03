@@ -13,15 +13,15 @@ import exceptions.UniformNotFoundException;
  * Only used for initialisation
  *
  */
-public class GameLoop {
+public class Loop {
 
 	private static final double MS_PER_UPDATE = 1000;
 	private static FrameworkProperties fp = FrameworkProperties.getProperties();
-	private static GameLoop gameLoop = null;
+	private static Loop gameLoop = null;
 	
-	public static GameLoop init() {
+	public static Loop init() {
 		if (gameLoop == null) {
-			gameLoop = new GameLoop();
+			gameLoop = new Loop();
 		}
 		return gameLoop;
 	}
@@ -42,9 +42,11 @@ public class GameLoop {
 	private void update() {
 		for (Model model : EntityManager.getModels().values()) {
 
+			
+			
+			
 			// for 2D rendering mode force all z-coords to 0
 			if (!fp.getRenderingMode()) {
-				System.out.println("ASD");
 				model.setZ(0);
 			}
 			
@@ -69,7 +71,8 @@ public class GameLoop {
 			// intervals
 			while (lag >= MS_PER_UPDATE) {
 				// updating methods
-				System.out.println(elapsed);
+
+				
 				update();
 				lag -= MS_PER_UPDATE;
 			}

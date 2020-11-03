@@ -23,7 +23,7 @@ public class Model extends Entity {
 	private ModelData data;
 
 	// generate new Model with 0 values for everything (except for scaling)
-	public Model(ModelType t, int vaoID, int textureID, ModelData data) {
+	public Model(ModelType t, int vaoID, int textureID, int textureMode, ModelData data) {
 		super();
 		
 		setType("model");
@@ -37,12 +37,11 @@ public class Model extends Entity {
 		type = t;
 		this.vaoID = vaoID;
 		this.textureID = textureID;
-
-		
+		this.texture = textureMode;
 		this.data = data;
 	}
 	
-	public int isTexture() {
+	public int getTexture() {
 		return texture;
 	}
 	

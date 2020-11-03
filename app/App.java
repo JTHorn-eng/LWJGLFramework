@@ -20,7 +20,6 @@ import org.joml.Vector3f;
 //sort out timings of threads
 //animations
 //particle effects
-//fix lighting bug(possibly models not forming properly - OBJLoader)
 //Option to load models and change vertex data, index data etc... for custom models made in the framework
 
 
@@ -34,10 +33,11 @@ public class App extends Framework{
 		init();
 		fp.setRenderingMode(RENDER_3D);
 		addModel("stall", ModelType.CUSTOM , "test");
-		
+		//addModel("test1", ModelType.SQUARE, "");
 		//addLineSeg("line1", new Vector3f(-10f, -10f, -1.1f), new Vector3f(10,10,-1f), 1.0f);
 		addLight("asd");
 		selectModel("stall").setZ(-10f);
+		//selectModel("test1").setZ(-10f);
 		setController("stall");
 		loop();
 	}

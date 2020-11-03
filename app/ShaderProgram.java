@@ -114,8 +114,8 @@ public class ShaderProgram {
 		return buffer;
 	}
 
-	public static void loadDefaultUniformVariables(Model model, Camera camera) throws UniformNotFoundException {
-		addUniformVariable("default", "viewMatrix");
+	public static void loadDefaultUniformVariables(Model model, Camera camera, Light light) throws UniformNotFoundException {
+		addUniformVariable("default","viewMatrix");
 		addUniformVariable("default","projMatrix");
 		addUniformVariable("default","transMatrix");
 		addUniformVariable("default","textureSampler");
@@ -124,18 +124,19 @@ public class ShaderProgram {
 		addUniformVariable("default","isTexture");
 		addUniformVariable("default","lightColour");
 		addUniformVariable("default","lightPosition");
-
-	
-		glUniform3fv(uniformLocations.get("default").get("base"), model.getBase());
+		addUniformVariable("default", "scalarBrightness");
+		
 		glUniform3fv(uniformLocations.get("default").get("lightColour"), loadVector3f(LightManager.getTest().getColor()));
 		glUniform3fv(uniformLocations.get("default").get("lightPosition"), loadVector3f(LightManager.getTest().getPosition()));
-
 
 		glUniformMatrix4fv(uniformLocations.get("default").get("transMatrix"), false, model.getTransformMatrix());
 		glUniformMatrix4fv(uniformLocations.get("default").get("viewMatrix"), false, camera.calculateViewMatrix());
 		glUniformMatrix4fv(uniformLocations.get("default").get("projMatrix"), false, Rendering.getProjMatrix());
 		glUniform1i(uniformLocations.get("default").get("textureSampler"), 0);
-		glUniform1i(uniformLocations.get("default").get("isTexture"), model.isTexture());
+		glUniform3fv(uniformLocations.get("default").get("base"), model.getBase());
+		glUniform1i(uniformLocations.get("default").get("isTexture"), model.getTexture());
+	
+		glUniform1f(uniformLocations.get("default").get("scalarBrightness"), light.getBrightness());
 	}
 
 	public static void deleteShaderPrograms() {
