@@ -1,31 +1,13 @@
-package app;
+package gui;
 
 import java.io.BufferedReader;
 
 import java.io.FileReader;
-import java.nio.FloatBuffer;
 import java.util.HashMap;
-import java.util.Vector;
-
-import org.joml.Vector3f;
-import org.lwjgl.BufferUtils;
-
-import entities.Camera;
-import entities.Light;
-import entities.LightManager;
-import entities.Model;
-import exceptions.UniformNotFoundException;
 
 import static org.lwjgl.opengl.GL20.*;
 
-/**
- * 
- * End-User will always associate a new shader program with their primitive
- * model. However they do not write them, instead options to add colouring,
- * lighting etc.. will be added functionally.
- *
- */
-public class ShaderProgram {
+public class GUIShader {
 	
 	static HashMap<String, Integer> programIDs = new HashMap<>();
 	static HashMap<String, HashMap <String, Integer>> uniformLocations = new HashMap<>();
@@ -97,50 +79,21 @@ public class ShaderProgram {
 
 	public static void loadAttribLocations(String name) {
 		glBindAttribLocation(programIDs.get(name) , 0, "positions");
-		glBindAttribLocation(programIDs.get(name) , 1, "textureData");
-		glBindAttribLocation(programIDs.get(name) , 2, "normals");
-	}
+		glBindAttribLocation(programIDs.get(name) , 1, "textureCoords");
 
+	}
+	
 	public static void addUniformVariable(String program, String name) {
 
 		uniformLocations.get(program).put(name, glGetUniformLocation(programIDs.get(program) , name));
 	}
 	
-	private static FloatBuffer loadVector3f(Vector3f vector) {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(3);
-		vector.get(buffer);
-		return buffer;
-	}
-
-	public static void loadDefaultUniformVariables(Model model, Camera camera, Light light) throws UniformNotFoundException {
-		addUniformVariable("default","viewMatrix");
-		addUniformVariable("default","projMatrix");
-		addUniformVariable("default","transMatrix");
-		addUniformVariable("default","textureSampler");
-		addUniformVariable("default","base");
-
-		addUniformVariable("default","isTexture");
-		addUniformVariable("default","lightColour");
-		addUniformVariable("default","lightPosition");
-		addUniformVariable("default", "scalarBrightness");
-		
-		glUniform3fv(uniformLocations.get("default").get("lightColour"), loadVector3f(LightManager.getTest().getColor()));
-		glUniform3fv(uniformLocations.get("default").get("lightPosition"), loadVector3f(LightManager.getTest().getPosition()));
-
-		glUniformMatrix4fv(uniformLocations.get("default").get("transMatrix"), false, model.getTransformMatrix());
-		glUniformMatrix4fv(uniformLocations.get("default").get("viewMatrix"), false, camera.calculateViewMatrix());
-		glUniformMatrix4fv(uniformLocations.get("default").get("projMatrix"), false, Rendering.getProjMatrix());
-		glUniform1i(uniformLocations.get("default").get("textureSampler"), 0);
-		glUniform3fv(uniformLocations.get("default").get("base"), model.getBase());
-		glUniform1i(uniformLocations.get("default").get("isTexture"), model.getTexture());
-	
-		glUniform1f(uniformLocations.get("default").get("scalarBrightness"), light.getBrightness());
-		
-		
+	public static void loadGUIUniforms() {
+		addUniformVariable("guis", "textureSampler");
+		glUniform1i(uniformLocations.get("guis").get("textureSampler"), 0);
 	}
 	
 	
-
 	public static void deleteShaderPrograms() {
 		glUseProgram(0);
 		for (String name : programIDs.keySet()) {

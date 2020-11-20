@@ -7,6 +7,7 @@ import entities.EntityManager;
 import entities.LightManager;
 import entities.Model;
 import gui.GUIRenderer;
+import gui.GUIShader;
 
 /*
  * Default values
@@ -31,11 +32,12 @@ public abstract class Framework extends Rendering {
 		// load models and associated shader programs
 		// load shaders first !
 		ShaderProgram sp = new ShaderProgram();
+		GUIShader gs = new GUIShader();
+		
 		try {
 			sp.createProgram("default", "shaders/Default_Vertex_Shader.txt", "shaders/Default_Fragment_Shader.txt");
 			sp.createProgram("lines", "shaders/Line_Vertex_Shader.txt", "shaders/Line_Fragment_Shader.txt");
-			sp.createProgram("guis", "shaders/GUI_Vertex_Shader.txt", "shaders/GUI_Fragment_Shader.txt");
-
+			gs.createProgram("guis", "shaders/GUI_Vertex_Shader.txt", "shaders/GUI_Fragment_Shader.txt");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

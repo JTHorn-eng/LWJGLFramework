@@ -28,14 +28,14 @@ public class App extends Framework{
 	public App() {
 		init();
 		fp.setRenderingMode(RENDER_3D);
-		addModel("stall", ModelType.CUSTOM , "test");
+		//addModel("stall", ModelType.CUSTOM , "test");
 		addText("Hello World!");
 		//addModel("test1", ModelType.SQUARE, "");
 		//addLineSeg("line1", new Vector3f(-10f, -10f, -1.1f), new Vector3f(10,10,-1f), 1.0f);
-		addLight("asd");
-		selectModel("stall").setZ(-10f);
+		//addLight("asd");
+		//selectModel("stall").setZ(-10f);
 		//selectModel("test1").setZ(-10f);
-		setController("stall");
+		//setController("stall");
 		loop();
 	}
 		
@@ -45,8 +45,8 @@ public class App extends Framework{
 	
 	@Override
 	public void preRendering() {
-		
 	}
+		
 	
 	@Override
 	public void postRendering() {

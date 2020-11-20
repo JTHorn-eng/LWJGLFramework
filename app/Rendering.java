@@ -52,16 +52,16 @@ public abstract class Rendering {
 	public static void render() {
 		
 		//cull faces not in view from the back
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-	
+		//glEnable(GL_CULL_FACE);
+		//glCullFace(GL_BACK);
+		GUIRenderer.render();
 		try {
 //				renderLines();
 			renderModels();
 		} catch (NoCameraException e) {
 			System.err.println(e);
 		}
-		GUIRenderer.render();
+		
 		glfwSwapBuffers(Window.getWindow());
 		glfwPollEvents();
 		clear();
