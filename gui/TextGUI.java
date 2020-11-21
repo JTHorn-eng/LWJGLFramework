@@ -133,9 +133,6 @@ public class TextGUI {
 			index[x] = indices.get(x);
 		}
 		
-
-		//float[] vertices2 = {-0.5f, 0.5f, 0f, -0.5f, -0.5f, 0f, 0.5f, -0.5f, 0f, 0.5f, 0.5f, 0f};
-		//int[] i2 =  { 0, 1, 3, 3, 1, 2 };
 		
 		return GUITexturePrimitive.generateModel(fileName, vertices, textures, index);
 	}

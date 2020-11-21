@@ -13,7 +13,6 @@ package app;
 //Using custom shaders
 //GUIs - Menus, clickables, not sure what else !!!
 //Audio engine
-//Sort out timings of threads
 //animations
 //particle effects
 //Option to load models and change vertex data, index data etc... for custom models made in the framework
@@ -23,6 +22,11 @@ package app;
 
 public class App extends Framework{
 
+	
+	
+	
+	
+	
 	FrameworkProperties fp = FrameworkProperties.getProperties();
 
 	public App() {

@@ -1,5 +1,6 @@
 package app;
 
+
 import static org.lwjgl.opengl.GL11.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -52,8 +53,8 @@ public abstract class Rendering {
 	public static void render() {
 		
 		//cull faces not in view from the back
-		//glEnable(GL_CULL_FACE);
-		//glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 		GUIRenderer.render();
 		try {
 //				renderLines();
@@ -71,7 +72,6 @@ public abstract class Rendering {
 		glUseProgram(ShaderProgram.getProgram("lines"));
 		glBindVertexArray(Primitives.getLineVAOID());
 		glEnableVertexAttribArray(0);
-		//System.out.println(EntityManager.getLines().values().size());
 		glDrawArrays(GL_LINES, 0, EntityManager.getLines().values().size() * 6);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

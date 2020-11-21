@@ -8,6 +8,8 @@ public class FrameworkProperties {
 	private int width = 1280;
 	private int height = 720;
 	private boolean renderingMode = false;
+	private static final String FONT = "";
+	
 
 	private FrameworkProperties() {
 		
