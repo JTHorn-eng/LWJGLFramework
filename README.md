@@ -8,6 +8,8 @@ Simple framework for rendering objects using LWJGL 3. This framework supports:
 * Controlling any object within the world 
 * Rendering 2D GUIs including basic shapes, images and text 
 
+Note: This is still a work in progress and is intended for generating customised default or bespoke models
+
 ## Usage
 To use the framework, extend from the Framework class and use getProperites to change
 FrameworkProperties. 
