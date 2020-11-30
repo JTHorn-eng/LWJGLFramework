@@ -9,10 +9,16 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.joml.Vector2f;
+
 import app.FrameworkProperties;
 import app.Window;
 
-public class TextGUI {
+public class TextGUI extends GUI {
+
+	public TextGUI(Vector2f position, float rotation, Vector2f scale) {
+		super(position, rotation, scale);
+	}
 
 	String text = "";
 	static final int FONT_COLS = 8; // columns in font file texture

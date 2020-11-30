@@ -3,6 +3,7 @@ package gui;
 import java.io.BufferedReader;
 
 import java.io.FileReader;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -88,9 +89,15 @@ public class GUIShader {
 		uniformLocations.get(program).put(name, glGetUniformLocation(programIDs.get(program) , name));
 	}
 	
-	public static void loadGUIUniforms() {
+	public static void loadGUIUniforms(FloatBuffer translate, float rotation, FloatBuffer scaling) {
 		addUniformVariable("guis", "textureSampler");
-		glUniform1i(uniformLocations.get("guis").get("textureSampler"), 0);
+		addUniformVariable("guis", "translate");
+		addUniformVariable("guis", "rotation");
+		addUniformVariable("guis", "scale");
+		glUniform2fv(uniformLocations.get("guis").get("translate"), translate);
+		glUniform1f(uniformLocations.get("guis").get("textureSampler"), rotation);
+		glUniform2fv(uniformLocations.get("guis").get("translate"), scaling);
+
 	}
 	
 	

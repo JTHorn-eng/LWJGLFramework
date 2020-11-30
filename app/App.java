@@ -33,7 +33,7 @@ public class App extends Framework{
 		init();
 		fp.setRenderingMode(RENDER_3D);
 		//addModel("stall", ModelType.CUSTOM , "test");
-		addText("Hello World!");
+		addText("Hello World!", 0f, 0f, 0f, 1f, 1f);
 		//addModel("test1", ModelType.SQUARE, "");
 		//addLineSeg("line1", new Vector3f(-10f, -10f, -1.1f), new Vector3f(10,10,-1f), 1.0f);
 		//addLight("asd");

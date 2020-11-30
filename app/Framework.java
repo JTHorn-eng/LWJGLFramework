@@ -46,8 +46,8 @@ public abstract class Framework extends Rendering {
 			
 	}
 	
-	public static void addText(String text) {
-		GUIRenderer.addText(text);
+	public static void addText(String text, float x, float y, float rotZ, float sx, float sy) {
+		GUIRenderer.addText(text, x, y, rotZ, sx, sy);
 	}
 	
 	

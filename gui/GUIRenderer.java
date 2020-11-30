@@ -3,6 +3,8 @@ package gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+
 import app.ShaderProgram;
 import exceptions.UniformNotFoundException;
 
@@ -23,8 +25,8 @@ public class GUIRenderer {
 		
 	}
 	
-	public static void addText(String text) {
-		TextGUI t = new TextGUI();
+	public static void addText(String text, float x, float y, float rotZ, float sx, float sy) {
+		TextGUI t = new TextGUI(new Vector2f(x, y), rotZ, new Vector2f(sx, sy));
 		t.addText(text);
 		textModels.add(t);
 	}
@@ -34,7 +36,7 @@ public class GUIRenderer {
 	static void renderText() {
 		glUseProgram(GUIShader.getProgram("guis"));
 		for (TextGUI text : textModels) {
-			GUIShader.loadGUIUniforms();
+			GUIShader.loadGUIUniforms(text.getPosition(), text.getRotation(), text.getScale());
 			
 			glBindVertexArray(text.getModel().getVaoID());
 			glEnableVertexAttribArray(0);
